@@ -19,7 +19,7 @@ var listCmd = &cobra.Command{
 		if len(args) > 0 {
 			pattern = args[0]
 		}
-		provider, err := providers.Get(providerName)
+		provider, err := providers.Get(providerName, true)
 		fatal(err)
 		for _, host := range provider.List(namespace + pattern) {
 			fmt.Println(host.Name)

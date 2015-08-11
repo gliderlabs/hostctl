@@ -20,7 +20,7 @@ var ipCmd = &cobra.Command{
 			cmd.Usage()
 			os.Exit(1)
 		}
-		provider, err := providers.Get(providerName)
+		provider, err := providers.Get(providerName, true)
 		fatal(err)
 		host := provider.Get(namespace + args[0])
 		if host == nil {

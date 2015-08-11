@@ -4,22 +4,21 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/MattAitchison/envconfig"
+	"github.com/progrium/envconfig"
 	"github.com/spf13/cobra"
 
 	_ "github.com/progrium/hostctl/digitalocean"
-	"github.com/progrium/hostctl/providers"
 )
 
 var (
-	providerName = envconfig.String("HOSTCTL_PROVIDER", "digitalocean", "cloud provider to use")
-	defaultName  = envconfig.String("HOSTCTL_NAME", "", "default name to use")
-	namespace    = envconfig.String("HOSTCTL_NAMESPACE", "", "namespace to use")
+	providerName = envconfig.String("HOSTCTL_PROVIDER", "digitalocean", "cloud provider")
+	defaultName  = envconfig.String("HOSTCTL_NAME", "", "optional default name")
+	namespace    = envconfig.String("HOSTCTL_NAMESPACE", "", "optional namespace for names")
 
-	hostImage   = envconfig.String("HOSTCTL_IMAGE", "", "image to use for vm")
-	hostFlavor  = envconfig.String("HOSTCTL_FLAVOR", "", "flavor to use for vm")
-	hostRegion  = envconfig.String("HOSTCTL_REGION", "", "region to use for vm")
-	hostKeyname = envconfig.String("HOSTCTL_KEYNAME", "", "comma-separated list of keynames")
+	hostImage   = envconfig.String("HOSTCTL_IMAGE", "", "vm image")
+	hostFlavor  = envconfig.String("HOSTCTL_FLAVOR", "", "vm flavor")
+	hostRegion  = envconfig.String("HOSTCTL_REGION", "", "vm region")
+	hostKeyname = envconfig.String("HOSTCTL_KEYNAME", "", "vm keyname")
 )
 
 var HostctlCmd = &cobra.Command{
@@ -35,16 +34,6 @@ func fatal(err error) {
 		fmt.Println("!!", err)
 		os.Exit(1)
 	}
-}
-
-func hostExists(provider providers.HostProvider, name string) bool {
-	hosts := provider.List(namespace + "*")
-	for i := range hosts {
-		if hosts[i].Name == name {
-			return true
-		}
-	}
-	return false
 }
 
 func main() {

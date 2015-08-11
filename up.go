@@ -20,10 +20,10 @@ var upCmd = &cobra.Command{
 			cmd.Usage()
 			os.Exit(1)
 		}
-		provider, err := providers.Get(providerName)
+		provider, err := providers.Get(providerName, true)
 		fatal(err)
 		name := fmt.Sprintf("%s%s", namespace, args[0])
-		if hostExists(provider, name) {
+		if provider.Get(name) != nil {
 			return
 		}
 		fatal(provider.Create(providers.Host{

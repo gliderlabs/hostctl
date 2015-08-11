@@ -2,34 +2,43 @@ package digitalocean
 
 import (
 	"fmt"
-	"os"
 	"path/filepath"
 	"time"
 
 	"code.google.com/p/goauth2/oauth"
 	"github.com/digitalocean/godo"
+	"github.com/progrium/envconfig"
 	"github.com/progrium/hostctl/providers"
 )
 
+var env = envconfig.NewEnvSet("digitalocean")
+
 func init() {
-	providers.Register(new(digitalOceanProvider), "digitalocean")
+	provider := &digitalOceanProvider{
+		token: env.Secret("DO_TOKEN", "token for DigitalOcean API v2"),
+	}
+	providers.Register(provider, "digitalocean")
 }
 
 type digitalOceanProvider struct {
 	client *godo.Client
+	token  string
 }
 
 func (p *digitalOceanProvider) Setup() error {
-	token := os.Getenv("DO_ACCESS_TOKEN")
-	if token == "" {
-		return fmt.Errorf("DO_ACCESS_TOKEN required for Digital Ocean provider")
+	if p.token == "" {
+		return fmt.Errorf("DO_TOKEN required for Digital Ocean provider")
 	}
 	t := &oauth.Transport{
-		Token: &oauth.Token{AccessToken: token},
+		Token: &oauth.Token{AccessToken: p.token},
 	}
 	p.client = godo.NewClient(t.Client())
 	_, _, err := p.client.Account.Get()
 	return err
+}
+
+func (p *digitalOceanProvider) Env() *envconfig.EnvSet {
+	return env
 }
 
 func (p *digitalOceanProvider) Create(host providers.Host) error {
