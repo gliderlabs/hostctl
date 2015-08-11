@@ -36,6 +36,13 @@ func fatal(err error) {
 	}
 }
 
+func optArg(args []string, i int, default_ string) string {
+	if i+1 > len(args) {
+		return default_
+	}
+	return args[i]
+}
+
 func main() {
 	HostctlCmd.Execute()
 }

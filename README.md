@@ -36,6 +36,18 @@ HOSTCTL_USERDATA			# vm userdata
 HOSTCTL_OPTIONS				# vm options
 ```
 
+## Todo
+
+* move to GL, project infrastructure
+* userdata, stdin override
+* scale cmd
+* up,down support multiple names
+* status output for up/down/scale
+* flesh out vm options for DO
+* global profile option
+* version
+* docs
+
 ## License
 
 MIT

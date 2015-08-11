@@ -14,8 +14,10 @@ var (
 )
 
 func init() {
-	envCmd.Flags().BoolVarP(&exportMode, "export", "e", false, "export vars for sourcing later")
-	envCmd.Flags().BoolVarP(&secretsMode, "secrets", "s", false, "show secrets or include in export")
+	envCmd.Flags().BoolVarP(&exportMode,
+		"export", "e", false, "export vars for sourcing later")
+	envCmd.Flags().BoolVarP(&secretsMode,
+		"secrets", "s", false, "show secrets or include in export")
 	HostctlCmd.AddCommand(envCmd)
 }
 
