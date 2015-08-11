@@ -22,7 +22,7 @@ hostctl up <name>             # create instance, blocks until ready
 hostctl down <name>           # destroy instance, blocks until terminated
 hostctl scale <name> <count>  # scale instance group
 hostctl ip <name>             # get instance ip
-hostctl ls <filter>           # list instances
+hostctl ls <pattern>          # list instances
 hostctl env                   # show current relevant environment
 
 HOSTCTL_PROVIDER      # what provider backend (digitalocean, ec2)
