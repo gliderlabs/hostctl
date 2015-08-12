@@ -8,16 +8,16 @@ import (
 	"time"
 
 	"code.google.com/p/goauth2/oauth"
+	"github.com/MattAitchison/env"
 	"github.com/digitalocean/godo"
-	"github.com/progrium/envconfig"
 	"github.com/progrium/hostctl/providers"
 )
 
-var env = envconfig.NewEnvSet("digitalocean")
+var envSet = env.NewEnvSet("digitalocean")
 
 func init() {
 	provider := &digitalOceanProvider{
-		token: env.Secret("DO_TOKEN", "token for DigitalOcean API v2"),
+		token: envSet.Secret("DO_TOKEN", "token for DigitalOcean API v2"),
 	}
 	providers.Register(provider, "digitalocean")
 }
@@ -39,8 +39,8 @@ func (p *digitalOceanProvider) Setup() error {
 	return err
 }
 
-func (p *digitalOceanProvider) Env() *envconfig.EnvSet {
-	return env
+func (p *digitalOceanProvider) Env() *env.EnvSet {
+	return envSet
 }
 
 func (p *digitalOceanProvider) Create(host providers.Host) error {

@@ -4,21 +4,21 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/progrium/envconfig"
+	"github.com/MattAitchison/env"
 	"github.com/spf13/cobra"
 
 	_ "github.com/progrium/hostctl/digitalocean"
 )
 
 var (
-	providerName = envconfig.String("HOSTCTL_PROVIDER", "digitalocean", "cloud provider")
-	defaultName  = envconfig.String("HOSTCTL_NAME", "", "optional default name")
-	namespace    = envconfig.String("HOSTCTL_NAMESPACE", "", "optional namespace for names")
+	providerName = env.String("HOSTCTL_PROVIDER", "digitalocean", "cloud provider")
+	defaultName  = env.String("HOSTCTL_NAME", "", "optional default name")
+	namespace    = env.String("HOSTCTL_NAMESPACE", "", "optional namespace for names")
 
-	hostImage   = envconfig.String("HOSTCTL_IMAGE", "", "vm image")
-	hostFlavor  = envconfig.String("HOSTCTL_FLAVOR", "", "vm flavor")
-	hostRegion  = envconfig.String("HOSTCTL_REGION", "", "vm region")
-	hostKeyname = envconfig.String("HOSTCTL_KEYNAME", "", "vm keyname")
+	hostImage   = env.String("HOSTCTL_IMAGE", "", "vm image")
+	hostFlavor  = env.String("HOSTCTL_FLAVOR", "", "vm flavor")
+	hostRegion  = env.String("HOSTCTL_REGION", "", "vm region")
+	hostKeyname = env.String("HOSTCTL_KEYNAME", "", "vm keyname")
 )
 
 var HostctlCmd = &cobra.Command{

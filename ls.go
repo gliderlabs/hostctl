@@ -2,12 +2,17 @@ package main
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/progrium/hostctl/providers"
 	"github.com/spf13/cobra"
 )
 
+var fullNames bool
+
 func init() {
+	listCmd.Flags().BoolVarP(&fullNames,
+		"full", "f", false, "show full names with namespace")
 	HostctlCmd.AddCommand(listCmd)
 }
 
@@ -22,7 +27,11 @@ var listCmd = &cobra.Command{
 		provider, err := providers.Get(providerName, true)
 		fatal(err)
 		for _, host := range provider.List(namespace + pattern) {
-			fmt.Println(host.Name)
+			if fullNames {
+				fmt.Println(host.Name)
+			} else {
+				fmt.Println(strings.TrimPrefix(host.Name, namespace))
+			}
 		}
 	},
 }

@@ -3,7 +3,7 @@ package providers
 import (
 	"fmt"
 
-	"github.com/progrium/envconfig"
+	"github.com/MattAitchison/env"
 )
 
 var providers = make(map[string]HostProvider)
@@ -30,7 +30,7 @@ type HostProvider interface {
 	Destroy(name string) error
 	List(pattern string) []Host
 	Get(name string) *Host
-	Env() *envconfig.EnvSet
+	Env() *env.EnvSet
 }
 
 type Host struct {
