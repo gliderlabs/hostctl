@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"sync"
 
 	"github.com/progrium/hostctl/providers"
 	"github.com/spf13/cobra"
@@ -13,7 +14,7 @@ func init() {
 }
 
 var downCmd = &cobra.Command{
-	Use:   "down <name>",
+	Use:   "down <name> [<name>...]",
 	Short: "Terminate a host if it exists",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) < 1 && defaultName == "" {
@@ -22,10 +23,22 @@ var downCmd = &cobra.Command{
 		}
 		provider, err := providers.Get(providerName, true)
 		fatal(err)
-		name := fmt.Sprintf("%s%s", namespace, optArg(args, 0, defaultName))
-		if provider.Get(name) == nil {
-			return
+		count := len(args)
+		if defaultName != "" && count == 0 {
+			count = 1
 		}
-		fatal(provider.Destroy(name))
+		var wg sync.WaitGroup
+		for i := 0; i < count; i++ {
+			wg.Add(1)
+			name := fmt.Sprintf("%s%s", namespace, optArg(args, i, defaultName))
+			go func() {
+				defer wg.Done()
+				if provider.Get(name) == nil {
+					return
+				}
+				fatal(provider.Destroy(name))
+			}()
+		}
+		wg.Wait()
 	},
 }

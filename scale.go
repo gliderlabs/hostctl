@@ -34,7 +34,8 @@ var scaleCmd = &cobra.Command{
 		var wg sync.WaitGroup
 		for i := 0; i < count; i++ {
 			wg.Add(1)
-			go func(name string) {
+			name := fmt.Sprintf(nameFmt, i)
+			go func() {
 				defer wg.Done()
 				if provider.Get(name) != nil {
 					return
@@ -46,7 +47,7 @@ var scaleCmd = &cobra.Command{
 					Region:  hostRegion,
 					Keyname: hostKeyname,
 				}))
-			}(fmt.Sprintf(nameFmt, i))
+			}()
 		}
 		wg.Wait()
 	},

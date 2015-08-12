@@ -3,6 +3,8 @@ package digitalocean
 import (
 	"fmt"
 	"path/filepath"
+	"strconv"
+	"strings"
 	"time"
 
 	"code.google.com/p/goauth2/oauth"
@@ -42,6 +44,16 @@ func (p *digitalOceanProvider) Env() *envconfig.EnvSet {
 }
 
 func (p *digitalOceanProvider) Create(host providers.Host) error {
+	var sshKey godo.DropletCreateSSHKey
+	if strings.Contains(host.Keyname, ":") {
+		sshKey.Fingerprint = host.Keyname
+	} else {
+		id, err := strconv.Atoi(host.Keyname)
+		if err != nil {
+			return err
+		}
+		sshKey.ID = id
+	}
 	droplet, _, err := p.client.Droplets.Create(&godo.DropletCreateRequest{
 		Name:   host.Name,
 		Region: host.Region,
@@ -49,9 +61,7 @@ func (p *digitalOceanProvider) Create(host providers.Host) error {
 		Image: godo.DropletCreateImage{
 			Slug: host.Image,
 		},
-		SSHKeys: []godo.DropletCreateSSHKey{
-			godo.DropletCreateSSHKey{Fingerprint: host.Keyname},
-		},
+		SSHKeys: []godo.DropletCreateSSHKey{sshKey},
 	})
 	if err != nil {
 		return err
