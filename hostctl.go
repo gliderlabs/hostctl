@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"sync"
 
 	"github.com/MattAitchison/env"
 	"github.com/spf13/cobra"
@@ -27,6 +28,15 @@ var HostctlCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Usage()
 	},
+}
+
+func parallelWait(items []string, fn func(int, string, *sync.WaitGroup)) {
+	var wg sync.WaitGroup
+	for i := 0; i < len(items); i++ {
+		wg.Add(1)
+		go fn(i, items[i], &wg)
+	}
+	wg.Wait()
 }
 
 func fatal(err error) {

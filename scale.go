@@ -28,27 +28,24 @@ var scaleCmd = &cobra.Command{
 		}
 		count, err := strconv.Atoi(args[1])
 		fatal(err)
+		var nodes []string
+		for i := 0; i < count; i++ {
+			nodes = append(nodes, fmt.Sprintf("%s%s.%v", namespace, args[0], i))
+		}
 		provider, err := providers.Get(providerName, true)
 		fatal(err)
-		nameFmt := namespace + args[0] + ".%v"
-		var wg sync.WaitGroup
-		for i := 0; i < count; i++ {
-			wg.Add(1)
-			name := fmt.Sprintf(nameFmt, i)
-			go func() {
-				defer wg.Done()
-				if provider.Get(name) != nil {
-					return
-				}
-				fatal(provider.Create(providers.Host{
-					Name:    name,
-					Flavor:  hostFlavor,
-					Image:   hostImage,
-					Region:  hostRegion,
-					Keyname: hostKeyname,
-				}))
-			}()
-		}
-		wg.Wait()
+		parallelWait(nodes, func(_ int, node string, wg *sync.WaitGroup) {
+			defer wg.Done()
+			if provider.Get(node) != nil {
+				return
+			}
+			fatal(provider.Create(providers.Host{
+				Name:    node,
+				Flavor:  hostFlavor,
+				Image:   hostImage,
+				Region:  hostRegion,
+				Keyname: hostKeyname,
+			}))
+		})
 	},
 }
