@@ -34,10 +34,11 @@ type HostProvider interface {
 }
 
 type Host struct {
-	Name    string
-	IP      string
-	Region  string
-	Image   string
-	Keyname string
-	Flavor  string
+	Name     string
+	IP       string
+	Region   string
+	Image    string
+	Keyname  string
+	Flavor   string
+	Userdata string
 }

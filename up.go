@@ -20,6 +20,7 @@ var upCmd = &cobra.Command{
 			cmd.Usage()
 			os.Exit(1)
 		}
+		loadStdinUserdata()
 		if len(args) == 0 {
 			args = []string{defaultName}
 		}
@@ -31,13 +32,7 @@ var upCmd = &cobra.Command{
 			if provider.Get(name) != nil {
 				return
 			}
-			fatal(provider.Create(providers.Host{
-				Name:    name,
-				Flavor:  hostFlavor,
-				Image:   hostImage,
-				Region:  hostRegion,
-				Keyname: hostKeyname,
-			}))
+			fatal(provider.Create(newHost(name)))
 		})
 	},
 }

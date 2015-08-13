@@ -47,7 +47,6 @@ HOSTCTL_USER          # ssh user
 ## Todo
 
 * move to GL, project infrastructure
-* userdata, stdin override
 * finish scale cmd
 * status output for up/down/scale
 * vm options

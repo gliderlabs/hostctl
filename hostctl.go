@@ -2,13 +2,16 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 	"sync"
 
 	"github.com/MattAitchison/env"
 	"github.com/spf13/cobra"
+	"golang.org/x/crypto/ssh/terminal"
 
 	_ "github.com/progrium/hostctl/digitalocean"
+	"github.com/progrium/hostctl/providers"
 )
 
 var (
@@ -16,10 +19,11 @@ var (
 	defaultName  = env.String("HOSTCTL_NAME", "", "optional default name")
 	namespace    = env.String("HOSTCTL_NAMESPACE", "", "optional namespace for names")
 
-	hostImage   = env.String("HOSTCTL_IMAGE", "", "vm image")
-	hostFlavor  = env.String("HOSTCTL_FLAVOR", "", "vm flavor")
-	hostRegion  = env.String("HOSTCTL_REGION", "", "vm region")
-	hostKeyname = env.String("HOSTCTL_KEYNAME", "", "vm keyname")
+	hostImage    = env.String("HOSTCTL_IMAGE", "", "vm image")
+	hostFlavor   = env.String("HOSTCTL_FLAVOR", "", "vm flavor")
+	hostRegion   = env.String("HOSTCTL_REGION", "", "vm region")
+	hostKeyname  = env.String("HOSTCTL_KEYNAME", "", "vm keyname")
+	hostUserdata = env.String("HOSTCTL_USERDATA", "", "vm user data")
 
 	user = env.String("HOSTCTL_USER", os.Getenv("USER"), "ssh user")
 )
@@ -30,6 +34,25 @@ var HostctlCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Usage()
 	},
+}
+
+func newHost(name string) providers.Host {
+	return providers.Host{
+		Name:     name,
+		Flavor:   hostFlavor,
+		Image:    hostImage,
+		Region:   hostRegion,
+		Keyname:  hostKeyname,
+		Userdata: hostUserdata,
+	}
+}
+
+func loadStdinUserdata() {
+	if !terminal.IsTerminal(int(os.Stdin.Fd())) {
+		data, err := ioutil.ReadAll(os.Stdin)
+		fatal(err)
+		hostUserdata = string(data)
+	}
 }
 
 func parallelWait(items []string, fn func(int, string, *sync.WaitGroup)) {

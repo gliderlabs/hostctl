@@ -61,7 +61,8 @@ func (p *digitalOceanProvider) Create(host providers.Host) error {
 		Image: godo.DropletCreateImage{
 			Slug: host.Image,
 		},
-		SSHKeys: []godo.DropletCreateSSHKey{sshKey},
+		SSHKeys:  []godo.DropletCreateSSHKey{sshKey},
+		UserData: host.Userdata,
 	})
 	if err != nil {
 		return err

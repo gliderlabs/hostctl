@@ -26,6 +26,7 @@ var scaleCmd = &cobra.Command{
 			cmd.Usage()
 			os.Exit(1)
 		}
+		loadStdinUserdata()
 		count, err := strconv.Atoi(args[1])
 		fatal(err)
 		var nodes []string
@@ -39,13 +40,7 @@ var scaleCmd = &cobra.Command{
 			if provider.Get(node) != nil {
 				return
 			}
-			fatal(provider.Create(providers.Host{
-				Name:    node,
-				Flavor:  hostFlavor,
-				Image:   hostImage,
-				Region:  hostRegion,
-				Keyname: hostKeyname,
-			}))
+			fatal(provider.Create(newHost(node)))
 		})
 	},
 }
