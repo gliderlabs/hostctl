@@ -14,7 +14,7 @@ func init() {
 
 var downCmd = &cobra.Command{
 	Use:   "down <name> [<name>...]",
-	Short: "Terminate a host if it exists",
+	Short: "Terminate host",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) < 1 && defaultName == "" {
 			cmd.Usage()

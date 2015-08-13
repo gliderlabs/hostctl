@@ -14,7 +14,7 @@ func init() {
 
 var upCmd = &cobra.Command{
 	Use:   "up <name> [<name>...]",
-	Short: "Provision a host if it doesn't already exist",
+	Short: "Provision host, wait until ready",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) < 1 && defaultName == "" {
 			cmd.Usage()

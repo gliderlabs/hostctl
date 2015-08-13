@@ -23,7 +23,7 @@ func init() {
 
 var envCmd = &cobra.Command{
 	Use:   "env",
-	Short: "Shows current relevant environment",
+	Short: "Show relevant environment",
 	Run: func(cmd *cobra.Command, args []string) {
 		env.PrintEnv(os.Stdout, exportMode, secretsMode)
 		provider, _ := providers.Get(providerName, false)

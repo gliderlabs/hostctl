@@ -16,7 +16,7 @@ func init() {
 
 var scaleCmd = &cobra.Command{
 	Use:   "scale <name> <count>",
-	Short: "Ensure a certain number of hosts are provisioned",
+	Short: "Resize host cluster",
 	Run: func(cmd *cobra.Command, args []string) {
 		// TODO: support default name
 		// TODO: support resizing a cluster

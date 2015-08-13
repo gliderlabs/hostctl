@@ -16,7 +16,7 @@ func init() {
 
 var sshCmd = &cobra.Command{
 	Use:   "ssh <name> [--] [<command>...]",
-	Short: "SSH to host by name",
+	Short: "SSH to host",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) < 1 && defaultName == "" {
 			cmd.Usage()

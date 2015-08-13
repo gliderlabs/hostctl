@@ -18,7 +18,7 @@ func init() {
 
 var listCmd = &cobra.Command{
 	Use:   "ls [pattern]",
-	Short: "List hosts or hosts matching pattern",
+	Short: "List hosts",
 	Run: func(cmd *cobra.Command, args []string) {
 		pattern := "*"
 		if len(args) > 0 {
