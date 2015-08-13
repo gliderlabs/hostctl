@@ -20,6 +20,8 @@ var (
 	hostFlavor  = env.String("HOSTCTL_FLAVOR", "", "vm flavor")
 	hostRegion  = env.String("HOSTCTL_REGION", "", "vm region")
 	hostKeyname = env.String("HOSTCTL_KEYNAME", "", "vm keyname")
+
+	user = env.String("HOSTCTL_USER", os.Getenv("USER"), "ssh user")
 )
 
 var HostctlCmd = &cobra.Command{
