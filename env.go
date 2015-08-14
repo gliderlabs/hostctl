@@ -18,7 +18,7 @@ func init() {
 		"export", "e", false, "export vars for sourcing later")
 	envCmd.Flags().BoolVarP(&secretsMode,
 		"secrets", "s", false, "show secrets or include in export")
-	HostctlCmd.AddCommand(envCmd)
+	Hostctl.AddCommand(envCmd)
 }
 
 var envCmd = &cobra.Command{

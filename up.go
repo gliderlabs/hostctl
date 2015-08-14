@@ -9,7 +9,7 @@ import (
 )
 
 func init() {
-	HostctlCmd.AddCommand(upCmd)
+	Hostctl.AddCommand(upCmd)
 }
 
 var upCmd = &cobra.Command{

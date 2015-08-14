@@ -11,7 +11,7 @@ import (
 )
 
 func init() {
-	HostctlCmd.AddCommand(scaleCmd)
+	Hostctl.AddCommand(scaleCmd)
 }
 
 var scaleCmd = &cobra.Command{

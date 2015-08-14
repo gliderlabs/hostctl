@@ -11,7 +11,7 @@ import (
 )
 
 func init() {
-	HostctlCmd.AddCommand(sshCmd)
+	Hostctl.AddCommand(sshCmd)
 }
 
 var sshCmd = &cobra.Command{

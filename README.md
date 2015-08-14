@@ -51,7 +51,6 @@ HOSTCTL_USER          # ssh user
 * status output for up/down/scale
 * vm options
 * global profile option
-* version
 * docs
 
 ## License

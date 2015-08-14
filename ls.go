@@ -13,7 +13,7 @@ var fullNames bool
 func init() {
 	listCmd.Flags().BoolVarP(&fullNames,
 		"full", "f", false, "show full names with namespace")
-	HostctlCmd.AddCommand(listCmd)
+	Hostctl.AddCommand(listCmd)
 }
 
 var listCmd = &cobra.Command{
