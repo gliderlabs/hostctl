@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/progrium/hostctl/providers"
+	"github.com/gliderlabs/hostctl/providers"
 	"golang.org/x/crypto/ssh/terminal"
 )
 

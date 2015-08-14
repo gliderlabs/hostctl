@@ -10,7 +10,7 @@ import (
 	"code.google.com/p/goauth2/oauth"
 	"github.com/MattAitchison/env"
 	"github.com/digitalocean/godo"
-	"github.com/progrium/hostctl/providers"
+	"github.com/gliderlabs/hostctl/providers"
 )
 
 var envSet = env.NewEnvSet("digitalocean")

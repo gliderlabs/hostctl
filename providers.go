@@ -1,5 +1,5 @@
 package main
 
 import (
-	_ "github.com/progrium/hostctl/digitalocean"
+	_ "github.com/gliderlabs/hostctl/digitalocean"
 )

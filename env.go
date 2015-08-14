@@ -4,7 +4,7 @@ import (
 	"os"
 
 	"github.com/MattAitchison/env"
-	"github.com/progrium/hostctl/providers"
+	"github.com/gliderlabs/hostctl/providers"
 	"github.com/spf13/cobra"
 )
 
