@@ -18,31 +18,78 @@ var scaleCmd = &cobra.Command{
 	Use:   "scale <name> <count>",
 	Short: "Resize host cluster",
 	Run: func(cmd *cobra.Command, args []string) {
-		// TODO: support default name
-		// TODO: support resizing a cluster
-		// TODO: support scaling from a single host made with `up`
-		// TODO: support scaling down
-		if len(args) < 2 {
+		if (len(args) < 2 && defaultName == "") ||
+			(len(args) < 1 && defaultName != "") {
 			cmd.Usage()
 			os.Exit(1)
 		}
-		loadStdinUserdata()
-		count, err := strconv.Atoi(args[1])
-		fatal(err)
-		var nodes []string
-		for i := 0; i < count; i++ {
-			nodes = append(nodes, fmt.Sprintf("%s%s.%v", namespace, args[0], i))
+		var name, count string
+		if len(args) == 1 {
+			name = defaultName
+			count = args[0]
+		} else {
+			name = args[0]
+			count = args[1]
 		}
+		loadStdinUserdata()
 		provider, err := providers.Get(providerName, true)
 		fatal(err)
+		existing := existingHosts(provider, name)
+		desired := desiredHosts(name, count)
+		hosts := append(strSet(existing, desired), namespace+name)
 		finished := progressBar(".", 2)
-		parallelWait(nodes, func(_ int, node string, wg *sync.WaitGroup) {
+		parallelWait(hosts, func(_ int, host string, wg *sync.WaitGroup) {
 			defer wg.Done()
-			if provider.Get(node) != nil {
+			if !strIn(host, desired) {
+				fatal(provider.Destroy(host))
 				return
 			}
-			fatal(provider.Create(newHost(node)))
+			if strIn(host, desired) && !strIn(host, existing) {
+				fatal(provider.Create(newHost(host)))
+				return
+			}
 		})
 		finished <- true
 	},
+}
+
+func desiredHosts(name, count string) []string {
+	c, err := strconv.Atoi(count)
+	fatal(err)
+	var hosts []string
+	for i := 0; i < c; i++ {
+		hosts = append(hosts, fmt.Sprintf("%s%s.%v", namespace, name, i))
+	}
+	return hosts
+}
+
+func existingHosts(provider providers.HostProvider, name string) []string {
+	var hosts []string
+	for _, h := range provider.List(namespace + name + ".*") {
+		hosts = append(hosts, h.Name)
+	}
+	return hosts
+}
+
+func strIn(str string, list []string) bool {
+	for i := range list {
+		if str == list[i] {
+			return true
+		}
+	}
+	return false
+}
+
+func strSet(strs ...[]string) []string {
+	m := make(map[string]bool)
+	for i := range strs {
+		for _, str := range strs[i] {
+			m[str] = true
+		}
+	}
+	var set []string
+	for k := range m {
+		set = append(set, k)
+	}
+	return set
 }

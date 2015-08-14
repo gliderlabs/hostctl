@@ -47,7 +47,7 @@ HOSTCTL_USER          # ssh user
 ## Todo
 
 * move to GL, project infrastructure
-* finish scale cmd
+* tests
 * docs
 
 ## License
