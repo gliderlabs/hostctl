@@ -1,0 +1,15 @@
+site_name: Hostctl
+site_url: https://gliderlabs.com/hostctl
+repo_url: https://github.com/gliderlabs/hostctl
+dev_addr: 0.0.0.0:8000
+theme_dir: /pagebuilder/theme
+google_analytics: ['UA-58928488-1', 'auto']
+pages:
+  - 'Readme': index.md
+  - 'User Guide':
+    - 'Quickstart': user/quickstart.md
+    - 'Reference': user/reference.md
+    - 'FAQ': user/faq.md
+  - 'Developer Guide':
+    - 'Adding Providers': dev/providers.md
+    - 'Staging Releases': dev/releases.md

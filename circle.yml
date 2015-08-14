@@ -1,0 +1,19 @@
+dependencies:
+  pre:
+    - make circleci
+  override:
+    - make build
+  post:
+    - tar -czvf $CIRCLE_ARTIFACTS/hostctl-linux.tgz -C build/Linux hostctl
+    - tar -czvf $CIRCLE_ARTIFACTS/hostctl-darwin.tgz -C build/Darwin hostctl
+    - tar -czvf $CIRCLE_ARTIFACTS/go-workspace.tgz -C ~/.go_workspace .
+
+test:
+  override:
+    - /bin/true
+
+deployment:
+  release:
+    branch: release
+    commands:
+      - make release
