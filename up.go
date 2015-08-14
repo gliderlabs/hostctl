@@ -26,6 +26,7 @@ var upCmd = &cobra.Command{
 		}
 		provider, err := providers.Get(providerName, true)
 		fatal(err)
+		finished := progressBar(".", 2)
 		parallelWait(args, func(_ int, arg string, wg *sync.WaitGroup) {
 			defer wg.Done()
 			name := namespace + arg
@@ -34,5 +35,6 @@ var upCmd = &cobra.Command{
 			}
 			fatal(provider.Create(newHost(name)))
 		})
+		finished <- true
 	},
 }

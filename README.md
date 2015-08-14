@@ -48,9 +48,6 @@ HOSTCTL_USER          # ssh user
 
 * move to GL, project infrastructure
 * finish scale cmd
-* status output for up/down/scale
-* vm options
-* global profile option
 * docs
 
 ## License

@@ -25,6 +25,7 @@ var downCmd = &cobra.Command{
 		}
 		provider, err := providers.Get(providerName, true)
 		fatal(err)
+		finished := progressBar(".", 1)
 		parallelWait(args, func(_ int, arg string, wg *sync.WaitGroup) {
 			defer wg.Done()
 			name := namespace + arg
@@ -33,5 +34,6 @@ var downCmd = &cobra.Command{
 			}
 			fatal(provider.Destroy(name))
 		})
+		finished <- true
 	},
 }

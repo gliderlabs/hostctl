@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 	"sync"
+	"time"
 
 	"github.com/progrium/hostctl/providers"
 	"golang.org/x/crypto/ssh/terminal"
@@ -50,4 +51,21 @@ func optArg(args []string, i int, default_ string) string {
 		return default_
 	}
 	return args[i]
+}
+
+func progressBar(unit string, interval time.Duration) chan bool {
+	finished := make(chan bool)
+	go func() {
+		for {
+			select {
+			case <-finished:
+				fmt.Fprintln(os.Stderr)
+				return
+			default:
+				time.Sleep(interval * time.Second)
+				fmt.Fprint(os.Stderr, unit)
+			}
+		}
+	}()
+	return finished
 }

@@ -35,6 +35,7 @@ var scaleCmd = &cobra.Command{
 		}
 		provider, err := providers.Get(providerName, true)
 		fatal(err)
+		finished := progressBar(".", 2)
 		parallelWait(nodes, func(_ int, node string, wg *sync.WaitGroup) {
 			defer wg.Done()
 			if provider.Get(node) != nil {
@@ -42,5 +43,6 @@ var scaleCmd = &cobra.Command{
 			}
 			fatal(provider.Create(newHost(node)))
 		})
+		finished <- true
 	},
 }
