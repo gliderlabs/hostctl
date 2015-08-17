@@ -5,19 +5,19 @@ import (
 	"sync"
 
 	"github.com/gliderlabs/hostctl/providers"
-	"github.com/spf13/cobra"
 )
 
 func init() {
 	Hostctl.AddCommand(upCmd)
 }
 
-var upCmd = &cobra.Command{
+var upCmd = &Command{
 	Use:   "up <name> [<name>...]",
 	Short: "Provision host, wait until ready",
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(ctx *Context) {
+		args := ctx.Args
 		if len(args) < 1 && defaultName == "" {
-			cmd.Usage()
+			ctx.Cmd.Usage()
 			os.Exit(1)
 		}
 		loadStdinUserdata()

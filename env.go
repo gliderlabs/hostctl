@@ -5,7 +5,6 @@ import (
 
 	"github.com/MattAitchison/env"
 	"github.com/gliderlabs/hostctl/providers"
-	"github.com/spf13/cobra"
 )
 
 var (
@@ -21,10 +20,10 @@ func init() {
 	Hostctl.AddCommand(envCmd)
 }
 
-var envCmd = &cobra.Command{
+var envCmd = &Command{
 	Use:   "env",
 	Short: "Show relevant environment",
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(ctx *Context) {
 		env.PrintEnv(os.Stdout, exportMode, secretsMode)
 		provider, _ := providers.Get(providerName, false)
 		if provider != nil {

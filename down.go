@@ -5,19 +5,19 @@ import (
 	"sync"
 
 	"github.com/gliderlabs/hostctl/providers"
-	"github.com/spf13/cobra"
 )
 
 func init() {
 	Hostctl.AddCommand(downCmd)
 }
 
-var downCmd = &cobra.Command{
+var downCmd = &Command{
 	Use:   "down <name> [<name>...]",
 	Short: "Terminate host",
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(ctx *Context) {
+		args := ctx.Args
 		if len(args) < 1 && defaultName == "" {
-			cmd.Usage()
+			ctx.Cmd.Usage()
 			os.Exit(1)
 		}
 		if len(args) == 0 {

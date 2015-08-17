@@ -7,20 +7,20 @@ import (
 	"sync"
 
 	"github.com/gliderlabs/hostctl/providers"
-	"github.com/spf13/cobra"
 )
 
 func init() {
 	Hostctl.AddCommand(scaleCmd)
 }
 
-var scaleCmd = &cobra.Command{
+var scaleCmd = &Command{
 	Use:   "scale <name> <count>",
 	Short: "Resize host cluster",
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(ctx *Context) {
+		args := ctx.Args
 		if (len(args) < 2 && defaultName == "") ||
 			(len(args) < 1 && defaultName != "") {
-			cmd.Usage()
+			ctx.Cmd.Usage()
 			os.Exit(1)
 		}
 		var name, count string

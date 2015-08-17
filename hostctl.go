@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"github.com/MattAitchison/env"
-	"github.com/spf13/cobra"
 )
 
 var (
@@ -25,22 +24,28 @@ var (
 )
 
 func main() {
+	Hostctl.Context = Context{
+		Out:  os.Stdout,
+		Err:  os.Stderr,
+		In:   os.Stdin,
+		Exit: os.Exit,
+	}
 	Hostctl.AddCommand(cmdVersion)
-	Hostctl.Execute()
+	fatal(Hostctl.Execute())
 }
 
-var Hostctl = &cobra.Command{
+var Hostctl = &Command{
 	Use:   "hostctl",
 	Short: "An opinionated tool for provisioning cloud VMs",
-	Run: func(cmd *cobra.Command, args []string) {
-		cmd.Usage()
+	Run: func(ctx *Context) {
+		ctx.Cmd.Help()
 	},
 }
 
-var cmdVersion = &cobra.Command{
+var cmdVersion = &Command{
 	Use:   "version",
 	Short: "Show version",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println(Version)
+	Run: func(ctx *Context) {
+		fmt.Fprintln(ctx, Version)
 	},
 }
