@@ -69,8 +69,11 @@ func (p *digitalOceanProvider) Create(host providers.Host) error {
 	}
 	for {
 		droplet, _, err = p.client.Droplets.Get(droplet.ID)
-		if droplet.Status == "active" {
+		if droplet != nil && droplet.Status == "active" {
 			return nil
+		}
+		if err != nil {
+			return err
 		}
 		time.Sleep(1 * time.Second)
 	}
