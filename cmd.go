@@ -2,10 +2,18 @@ package main
 
 import (
 	"io"
+	"os"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 )
+
+var defaultContext = Context{
+	Out:  os.Stdout,
+	Err:  os.Stderr,
+	In:   os.Stdin,
+	Exit: os.Exit,
+}
 
 type Command struct {
 	Use     string
@@ -15,8 +23,7 @@ type Command struct {
 	Example string
 	Run     func(*Context)
 
-	Cmd     *cobra.Command
-	Context Context
+	Cmd *cobra.Command
 }
 
 func (c *Command) Execute() error {
@@ -24,8 +31,7 @@ func (c *Command) Execute() error {
 }
 
 func (c *Command) AddCommand(cmd *Command) {
-	cmd.Context = c.setup().Context
-	c.Cmd.AddCommand(cmd.setup().Cmd)
+	c.setup().Cmd.AddCommand(cmd.setup().Cmd)
 }
 
 func (c *Command) Flags() *pflag.FlagSet {
@@ -43,7 +49,7 @@ func (c *Command) setup() *Command {
 		Long:    c.Long,
 		Example: c.Example,
 		Run: func(cmd *cobra.Command, args []string) {
-			ctx := c.Context // make a copy
+			ctx := defaultContext // make a copy
 			ctx.Args = args
 			ctx.Cmd = cmd
 			cmd.SetOutput(&ctx)
@@ -59,6 +65,7 @@ type Context struct {
 	Err  io.Writer
 	In   io.Reader
 	Exit func(int)
+
 	Args []string
 	Cmd  *cobra.Command
 }

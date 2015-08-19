@@ -1,8 +1,6 @@
 package main
 
 import (
-	"os"
-
 	"github.com/MattAitchison/env"
 	"github.com/gliderlabs/hostctl/providers"
 )
@@ -24,10 +22,10 @@ var envCmd = &Command{
 	Use:   "env",
 	Short: "Show relevant environment",
 	Run: func(ctx *Context) {
-		env.PrintEnv(os.Stdout, exportMode, secretsMode)
+		env.PrintEnv(ctx, exportMode, secretsMode)
 		provider, _ := providers.Get(providerName, false)
-		if provider != nil {
-			provider.Env().PrintEnv(os.Stdout, exportMode, secretsMode)
+		if provider != nil && provider.Env() != nil {
+			provider.Env().PrintEnv(ctx, exportMode, secretsMode)
 		}
 	},
 }

@@ -2,6 +2,7 @@ package providers
 
 import (
 	"fmt"
+	"path/filepath"
 
 	"github.com/MattAitchison/env"
 )
@@ -41,4 +42,51 @@ type Host struct {
 	Keyname  string
 	Flavor   string
 	Userdata string
+}
+
+type TestProvider struct {
+	hosts []Host
+}
+
+func (p *TestProvider) Setup() error {
+	return nil
+}
+
+func (p *TestProvider) Create(host Host) error {
+	p.hosts = append(p.hosts, host)
+	return nil
+}
+
+func (p *TestProvider) Destroy(name string) error {
+	var hosts []Host
+	for i := range p.hosts {
+		if p.hosts[i].Name != name {
+			hosts = append(hosts, p.hosts[i])
+		}
+	}
+	p.hosts = hosts
+	return nil
+}
+
+func (p *TestProvider) List(pattern string) []Host {
+	var hosts []Host
+	for i := range p.hosts {
+		if ok, _ := filepath.Match(pattern, p.hosts[i].Name); ok {
+			hosts = append(hosts, p.hosts[i])
+		}
+	}
+	return hosts
+}
+
+func (p *TestProvider) Get(name string) *Host {
+	for i := range p.hosts {
+		if p.hosts[i].Name == name {
+			return &p.hosts[i]
+		}
+	}
+	return nil
+}
+
+func (p *TestProvider) Env() *env.EnvSet {
+	return nil
 }

@@ -24,13 +24,7 @@ var (
 )
 
 func main() {
-	Hostctl.Context = Context{
-		Out:  os.Stdout,
-		Err:  os.Stderr,
-		In:   os.Stdin,
-		Exit: os.Exit,
-	}
-	Hostctl.AddCommand(cmdVersion)
+	Hostctl.AddCommand(versionCmd)
 	fatal(Hostctl.Execute())
 }
 
@@ -42,7 +36,7 @@ var Hostctl = &Command{
 	},
 }
 
-var cmdVersion = &Command{
+var versionCmd = &Command{
 	Use:   "version",
 	Short: "Show version",
 	Run: func(ctx *Context) {
