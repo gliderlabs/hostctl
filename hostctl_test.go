@@ -25,6 +25,20 @@ func resetEnv() {
 	user = ""
 }
 
+func captureExit() (func() int, func(int)) {
+	ch := make(chan int, 1)
+	return func() int {
+			select {
+			case status := <-ch:
+				return status
+			default:
+				return 0
+			}
+		}, func(status int) {
+			ch <- status
+		}
+}
+
 func TestHostctlCmd(t *testing.T) {
 	resetEnv()
 	var out, err bytes.Buffer

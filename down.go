@@ -1,7 +1,6 @@
 package main
 
 import (
-	"os"
 	"sync"
 
 	"github.com/gliderlabs/hostctl/providers"
@@ -15,25 +14,24 @@ var downCmd = &Command{
 	Use:   "down <name> [<name>...]",
 	Short: "Terminate host",
 	Run: func(ctx *Context) {
-		args := ctx.Args
-		if len(args) < 1 && defaultName == "" {
+		if len(ctx.Args) < 1 && defaultName == "" {
 			ctx.Cmd.Usage()
-			os.Exit(1)
+			ctx.Exit(1)
 		}
-		if len(args) == 0 {
-			args = []string{defaultName}
+		if len(ctx.Args) == 0 {
+			ctx.Args = []string{defaultName}
 		}
 		provider, err := providers.Get(providerName, true)
-		fatal(err)
-		finished := progressBar(".", 1)
-		parallelWait(args, func(_ int, arg string, wg *sync.WaitGroup) {
+		ctxFatal(ctx, err)
+		finished := progressBar(ctx, ".", 1)
+		parallelWait(ctx.Args, func(_ int, arg string, wg *sync.WaitGroup) {
 			defer wg.Done()
 			name := namespace + arg
 			if provider.Get(name) == nil {
 				return
 			}
-			fatal(provider.Destroy(name))
+			ctxFatal(ctx, provider.Destroy(name))
 		})
-		finished <- true
+		finished()
 	},
 }

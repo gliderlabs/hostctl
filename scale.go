@@ -37,7 +37,7 @@ var scaleCmd = &Command{
 		existing := existingHosts(provider, name)
 		desired := desiredHosts(name, count)
 		hosts := append(strSet(existing, desired), namespace+name)
-		finished := progressBar(".", 2)
+		finished := progressBar(ctx, ".", 2)
 		parallelWait(hosts, func(_ int, host string, wg *sync.WaitGroup) {
 			defer wg.Done()
 			if !strIn(host, desired) {
@@ -49,7 +49,7 @@ var scaleCmd = &Command{
 				return
 			}
 		})
-		finished <- true
+		finished()
 	},
 }
 

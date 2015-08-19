@@ -26,7 +26,7 @@ var upCmd = &Command{
 		}
 		provider, err := providers.Get(providerName, true)
 		fatal(err)
-		finished := progressBar(".", 2)
+		finished := progressBar(ctx, ".", 2)
 		parallelWait(args, func(_ int, arg string, wg *sync.WaitGroup) {
 			defer wg.Done()
 			name := namespace + arg
@@ -35,6 +35,6 @@ var upCmd = &Command{
 			}
 			fatal(provider.Create(newHost(name)))
 		})
-		finished <- true
+		finished()
 	},
 }
