@@ -1,16 +1,18 @@
+machine:
+  services:
+    - docker
+
 dependencies:
   pre:
-    - make circleci
+    - docker run --rm gliderlabs/glu | tar xC /home/ubuntu/bin
+    - glu circleci
+    - glu container up
   override:
-    - make build
-  post:
-    - tar -czvf $CIRCLE_ARTIFACTS/hostctl-linux.tgz -C build/Linux hostctl
-    - tar -czvf $CIRCLE_ARTIFACTS/hostctl-darwin.tgz -C build/Darwin hostctl
-    - tar -czvf $CIRCLE_ARTIFACTS/go-workspace.tgz -C ~/.go_workspace .
+    - glu build linux,darwin
 
 test:
   override:
-    - /bin/true
+    - go test -v -race
 
 deployment:
   release:
