@@ -46,13 +46,6 @@ func fatal(err error) {
 	}
 }
 
-func ctxFatal(ctx *Context, err error) {
-	if err != nil {
-		fmt.Fprintln(ctx, "!!", err)
-		ctx.Exit(1)
-	}
-}
-
 func optArg(args []string, i int, default_ string) string {
 	if i+1 > len(args) {
 		return default_
@@ -60,7 +53,7 @@ func optArg(args []string, i int, default_ string) string {
 	return args[i]
 }
 
-func progressBar(ctx *Context, unit string, interval time.Duration) func() {
+func progressBar(unit string, interval time.Duration) func() {
 	finished := make(chan bool)
 	go func() {
 		for {
@@ -68,12 +61,12 @@ func progressBar(ctx *Context, unit string, interval time.Duration) func() {
 			case <-finished:
 				return
 			case <-time.After(interval * time.Second):
-				fmt.Fprint(ctx.Err, unit)
+				fmt.Fprint(os.Stderr, unit)
 			}
 		}
 	}()
 	return func() {
 		finished <- true
-		fmt.Fprintln(ctx.Err)
+		fmt.Fprintln(os.Stderr)
 	}
 }

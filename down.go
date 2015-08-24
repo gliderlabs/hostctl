@@ -1,36 +1,38 @@
 package main
 
 import (
+	"os"
 	"sync"
 
 	"github.com/gliderlabs/hostctl/providers"
+	"github.com/spf13/cobra"
 )
 
 func init() {
 	Hostctl.AddCommand(downCmd)
 }
 
-var downCmd = &Command{
+var downCmd = &cobra.Command{
 	Use:   "down <name> [<name>...]",
 	Short: "Terminate host",
-	Run: func(ctx *Context) {
-		if len(ctx.Args) < 1 && defaultName == "" {
-			ctx.Cmd.Usage()
-			ctx.Exit(1)
+	Run: func(cmd *cobra.Command, args []string) {
+		if len(args) < 1 && defaultName == "" {
+			cmd.Usage()
+			os.Exit(1)
 		}
-		if len(ctx.Args) == 0 {
-			ctx.Args = []string{defaultName}
+		if len(args) == 0 {
+			args = []string{defaultName}
 		}
 		provider, err := providers.Get(providerName, true)
-		ctxFatal(ctx, err)
-		finished := progressBar(ctx, ".", 1)
-		parallelWait(ctx.Args, func(_ int, arg string, wg *sync.WaitGroup) {
+		fatal(err)
+		finished := progressBar(".", 1)
+		parallelWait(args, func(_ int, arg string, wg *sync.WaitGroup) {
 			defer wg.Done()
 			name := namespace + arg
 			if provider.Get(name) == nil {
 				return
 			}
-			ctxFatal(ctx, provider.Destroy(name))
+			fatal(provider.Destroy(name))
 		})
 		finished()
 	},

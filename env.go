@@ -1,8 +1,11 @@
 package main
 
 import (
+	"os"
+
 	"github.com/MattAitchison/env"
 	"github.com/gliderlabs/hostctl/providers"
+	"github.com/spf13/cobra"
 )
 
 var (
@@ -18,14 +21,14 @@ func init() {
 	Hostctl.AddCommand(envCmd)
 }
 
-var envCmd = &Command{
+var envCmd = &cobra.Command{
 	Use:   "env",
 	Short: "Show relevant environment",
-	Run: func(ctx *Context) {
-		env.PrintEnv(ctx, exportMode, secretsMode)
+	Run: func(cmd *cobra.Command, args []string) {
+		env.PrintEnv(os.Stdout, exportMode, secretsMode)
 		provider, _ := providers.Get(providerName, false)
 		if provider != nil && provider.Env() != nil {
-			provider.Env().PrintEnv(ctx, exportMode, secretsMode)
+			provider.Env().PrintEnv(os.Stdout, exportMode, secretsMode)
 		}
 	},
 }

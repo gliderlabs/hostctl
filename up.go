@@ -5,19 +5,19 @@ import (
 	"sync"
 
 	"github.com/gliderlabs/hostctl/providers"
+	"github.com/spf13/cobra"
 )
 
 func init() {
 	Hostctl.AddCommand(upCmd)
 }
 
-var upCmd = &Command{
+var upCmd = &cobra.Command{
 	Use:   "up <name> [<name>...]",
 	Short: "Provision host, wait until ready",
-	Run: func(ctx *Context) {
-		args := ctx.Args
+	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) < 1 && defaultName == "" {
-			ctx.Cmd.Usage()
+			cmd.Usage()
 			os.Exit(1)
 		}
 		loadStdinUserdata()
@@ -26,7 +26,7 @@ var upCmd = &Command{
 		}
 		provider, err := providers.Get(providerName, true)
 		fatal(err)
-		finished := progressBar(ctx, ".", 2)
+		finished := progressBar(".", 2)
 		parallelWait(args, func(_ int, arg string, wg *sync.WaitGroup) {
 			defer wg.Done()
 			name := namespace + arg

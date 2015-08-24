@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/gliderlabs/hostctl/providers"
+	"github.com/spf13/cobra"
 )
 
 var fullNames bool
@@ -15,11 +16,10 @@ func init() {
 	Hostctl.AddCommand(listCmd)
 }
 
-var listCmd = &Command{
+var listCmd = &cobra.Command{
 	Use:   "ls [pattern]",
 	Short: "List hosts",
-	Run: func(ctx *Context) {
-		args := ctx.Args
+	Run: func(cmd *cobra.Command, args []string) {
 		pattern := "*"
 		if len(args) > 0 {
 			pattern = args[0]

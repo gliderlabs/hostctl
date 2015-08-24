@@ -5,19 +5,19 @@ import (
 	"os"
 
 	"github.com/gliderlabs/hostctl/providers"
+	"github.com/spf13/cobra"
 )
 
 func init() {
 	Hostctl.AddCommand(ipCmd)
 }
 
-var ipCmd = &Command{
+var ipCmd = &cobra.Command{
 	Use:   "ip <name>",
 	Short: "Show IP for host",
-	Run: func(ctx *Context) {
-		args := ctx.Args
+	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) < 1 && defaultName == "" {
-			ctx.Cmd.Usage()
+			cmd.Usage()
 			os.Exit(1)
 		}
 		provider, err := providers.Get(providerName, true)

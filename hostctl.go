@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/MattAitchison/env"
+	"github.com/spf13/cobra"
 )
 
 var (
@@ -31,18 +32,18 @@ func main() {
 	fatal(Hostctl.Execute())
 }
 
-var Hostctl = &Command{
+var Hostctl = &cobra.Command{
 	Use:   "hostctl",
 	Short: "An opinionated tool for provisioning cloud VMs",
-	Run: func(ctx *Context) {
-		ctx.Cmd.Help()
+	Run: func(cmd *cobra.Command, args []string) {
+		cmd.Help()
 	},
 }
 
-var versionCmd = &Command{
+var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "Show version",
-	Run: func(ctx *Context) {
-		fmt.Fprintln(ctx, Version)
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println(Version)
 	},
 }

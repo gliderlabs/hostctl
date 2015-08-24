@@ -7,19 +7,19 @@ import (
 	"syscall"
 
 	"github.com/gliderlabs/hostctl/providers"
+	"github.com/spf13/cobra"
 )
 
 func init() {
 	Hostctl.AddCommand(sshCmd)
 }
 
-var sshCmd = &Command{
+var sshCmd = &cobra.Command{
 	Use:   "ssh <name> [--] [<command>...]",
 	Short: "SSH to host",
-	Run: func(ctx *Context) {
-		args := ctx.Args
+	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) < 1 && defaultName == "" {
-			ctx.Cmd.Usage()
+			cmd.Usage()
 			os.Exit(1)
 		}
 		name, sshCmd := sshParseArgs(args)
