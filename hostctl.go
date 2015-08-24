@@ -23,8 +23,11 @@ var (
 	user = env.String("HOSTCTL_USER", os.Getenv("USER"), "ssh user")
 )
 
-func main() {
+func init() {
 	Hostctl.AddCommand(versionCmd)
+}
+
+func main() {
 	fatal(Hostctl.Execute())
 }
 

@@ -3,6 +3,7 @@ package providers
 import (
 	"fmt"
 	"path/filepath"
+	"sync"
 
 	"github.com/MattAitchison/env"
 )
@@ -45,7 +46,8 @@ type Host struct {
 }
 
 type TestProvider struct {
-	hosts []Host
+	mu    sync.Mutex
+	Hosts []Host
 }
 
 func (p *TestProvider) Setup() error {
@@ -53,35 +55,43 @@ func (p *TestProvider) Setup() error {
 }
 
 func (p *TestProvider) Create(host Host) error {
-	p.hosts = append(p.hosts, host)
+	p.mu.Lock()
+	defer p.mu.Unlock()
+	p.Hosts = append(p.Hosts, host)
 	return nil
 }
 
 func (p *TestProvider) Destroy(name string) error {
+	p.mu.Lock()
+	defer p.mu.Unlock()
 	var hosts []Host
-	for i := range p.hosts {
-		if p.hosts[i].Name != name {
-			hosts = append(hosts, p.hosts[i])
+	for i := range p.Hosts {
+		if p.Hosts[i].Name != name {
+			hosts = append(hosts, p.Hosts[i])
 		}
 	}
-	p.hosts = hosts
+	p.Hosts = hosts
 	return nil
 }
 
 func (p *TestProvider) List(pattern string) []Host {
+	p.mu.Lock()
+	defer p.mu.Unlock()
 	var hosts []Host
-	for i := range p.hosts {
-		if ok, _ := filepath.Match(pattern, p.hosts[i].Name); ok {
-			hosts = append(hosts, p.hosts[i])
+	for i := range p.Hosts {
+		if ok, _ := filepath.Match(pattern, p.Hosts[i].Name); ok {
+			hosts = append(hosts, p.Hosts[i])
 		}
 	}
 	return hosts
 }
 
 func (p *TestProvider) Get(name string) *Host {
-	for i := range p.hosts {
-		if p.hosts[i].Name == name {
-			return &p.hosts[i]
+	p.mu.Lock()
+	defer p.mu.Unlock()
+	for i := range p.Hosts {
+		if p.Hosts[i].Name == name {
+			return &p.Hosts[i]
 		}
 	}
 	return nil

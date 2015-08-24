@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"testing"
 
 	"github.com/facebookgo/ensure"
@@ -9,7 +8,7 @@ import (
 )
 
 func TestDownCmd(t *testing.T) {
-	resetEnv()
+	t.Parallel()
 	provider := new(providers.TestProvider)
 	provider.Create(providers.Host{
 		Name: "test1",
@@ -17,18 +16,11 @@ func TestDownCmd(t *testing.T) {
 	provider.Create(providers.Host{
 		Name: "test2",
 	})
-	providerName = "test"
-	providers.Register(provider, providerName)
-	var out, err bytes.Buffer
-	status, exit := captureExit()
-	runCmd(downCmd, &Context{
-		Out:  &out,
-		Err:  &err,
-		Args: []string{"test1"},
-		Exit: exit,
-	})
+
+	stdout, stderr := testRunCmd(t, "hostctl down test1", 0, provider, nil)
+	ensure.DeepEqual(t, stdout.String(), "")
+	ensure.DeepEqual(t, stderr.String(), "\n")
+
 	ensure.DeepEqual(t, provider.Get("test1"), (*providers.Host)(nil))
 	ensure.NotDeepEqual(t, provider.Get("test2"), (*providers.Host)(nil))
-	ensure.DeepEqual(t, err.String(), "\n")
-	ensure.DeepEqual(t, status(), 0)
 }
