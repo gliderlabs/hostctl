@@ -12,8 +12,7 @@ dependencies:
 
 test:
   pre:
-    - go get -d
-    - go test -i
+    - go get -d -t
   override:
     - go test -v -race
 
