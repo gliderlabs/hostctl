@@ -11,8 +11,9 @@ dependencies:
     - glu build linux,darwin
 
 test:
+  pre:
+    - go test -i
   override:
-    - go get -d
     - go test -v -race
 
 deployment:
