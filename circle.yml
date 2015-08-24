@@ -12,6 +12,7 @@ dependencies:
 
 test:
   override:
+    - go get -d
     - go test -v -race
 
 deployment:
