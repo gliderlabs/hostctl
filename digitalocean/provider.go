@@ -7,10 +7,10 @@ import (
 	"strings"
 	"time"
 
-	"code.google.com/p/goauth2/oauth"
 	"github.com/MattAitchison/env"
 	"github.com/digitalocean/godo"
 	"github.com/gliderlabs/hostctl/providers"
+	"golang.org/x/oauth2"
 )
 
 var envSet = env.NewEnvSet("digitalocean")
@@ -31,10 +31,9 @@ func (p *digitalOceanProvider) Setup() error {
 	if p.token == "" {
 		return fmt.Errorf("DO_TOKEN required for Digital Ocean provider")
 	}
-	t := &oauth.Transport{
-		Token: &oauth.Token{AccessToken: p.token},
-	}
-	p.client = godo.NewClient(t.Client())
+	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: p.token})
+	oauthClient := oauth2.NewClient(oauth2.NoContext, tokenSource)
+	p.client = godo.NewClient(oauthClient)
 	_, _, err := p.client.Account.Get()
 	return err
 }
