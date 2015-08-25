@@ -46,21 +46,20 @@ func (p *awsProvider) Create(host providers.Host) error {
 	}
 
 	if res != nil && len(res.Instances) > 0 {
-		_, err := p.client.CreateTags(&ec2.CreateTagsInput{
-			Resources: []*string{
-				res.Instances[0].InstanceId,
-			},
-			Tags: []*ec2.Tag{
-				{
-					Key:   aws.String("Name"),
-					Value: aws.String(host.Name),
-				},
-			},
-		})
-		return err
+		return fmt.Errorf("no instances created")
 	}
-
-	return fmt.Errorf("unknown error")
+	_, err = p.client.CreateTags(&ec2.CreateTagsInput{
+		Resources: []*string{
+			res.Instances[0].InstanceId,
+		},
+		Tags: []*ec2.Tag{
+			{
+				Key:   aws.String("Name"),
+				Value: aws.String(host.Name),
+			},
+		},
+	})
+	return err
 }
 
 func (p *awsProvider) Destroy(name string) error {
