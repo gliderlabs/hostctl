@@ -38,7 +38,7 @@ func sshExec(ip string, cmd []string) error {
 	if err != nil {
 		return fmt.Errorf("Unable to find ssh")
 	}
-	args := []string{"ssh", "-A", "-l", user, ip}
+	args := []string{"ssh", "-A", "-l", sshUser, ip}
 	return syscall.Exec(binary, append(args, cmd...), os.Environ())
 }
 

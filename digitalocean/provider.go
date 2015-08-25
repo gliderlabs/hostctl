@@ -16,22 +16,26 @@ import (
 var envSet = env.NewEnvSet("digitalocean")
 
 func init() {
-	provider := &digitalOceanProvider{
-		token: envSet.Secret("DO_TOKEN", "token for DigitalOcean API v2"),
-	}
-	providers.Register(provider, "digitalocean")
+	readEnv()
+	providers.Register(new(digitalOceanProvider), "digitalocean")
+}
+
+func readEnv() {
+	envSet.Clear()
+	envSet.Secret("DO_TOKEN", "token for DigitalOcean API v2")
 }
 
 type digitalOceanProvider struct {
 	client *godo.Client
-	token  string
 }
 
 func (p *digitalOceanProvider) Setup() error {
-	if p.token == "" {
+	readEnv()
+	token := envSet.Var("DO_TOKEN").Value.Get().(string)
+	if token == "" {
 		return fmt.Errorf("DO_TOKEN required for Digital Ocean provider")
 	}
-	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: p.token})
+	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: token})
 	oauthClient := oauth2.NewClient(oauth2.NoContext, tokenSource)
 	p.client = godo.NewClient(oauthClient)
 	_, _, err := p.client.Account.Get()
@@ -39,6 +43,7 @@ func (p *digitalOceanProvider) Setup() error {
 }
 
 func (p *digitalOceanProvider) Env() *env.EnvSet {
+	readEnv()
 	return envSet
 }
 

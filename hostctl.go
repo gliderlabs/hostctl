@@ -11,24 +11,37 @@ import (
 var (
 	Version string
 
-	providerName = env.String("HOSTCTL_PROVIDER", "digitalocean", "cloud provider")
-	defaultName  = env.String("HOSTCTL_NAME", "", "optional default name")
-	namespace    = env.String("HOSTCTL_NAMESPACE", "", "optional namespace for names")
+	providerName string
+	defaultName  string
+	namespace    string
 
-	hostImage    = env.String("HOSTCTL_IMAGE", "", "vm image")
-	hostFlavor   = env.String("HOSTCTL_FLAVOR", "", "vm flavor")
-	hostRegion   = env.String("HOSTCTL_REGION", "", "vm region")
-	hostKeyname  = env.String("HOSTCTL_KEYNAME", "", "vm keyname")
-	hostUserdata = env.String("HOSTCTL_USERDATA", "", "vm user data")
+	hostImage    string
+	hostFlavor   string
+	hostRegion   string
+	hostKeyname  string
+	hostUserdata string
 
-	user = env.String("HOSTCTL_USER", os.Getenv("USER"), "ssh user")
+	sshUser string
 
 	profile string
 )
 
+func readEnv() {
+	env.Clear()
+	providerName = env.String("HOSTCTL_PROVIDER", "digitalocean", "cloud provider")
+	defaultName = env.String("HOSTCTL_NAME", "", "optional default name")
+	namespace = env.String("HOSTCTL_NAMESPACE", "", "optional namespace for names")
+	hostImage = env.String("HOSTCTL_IMAGE", "", "vm image")
+	hostFlavor = env.String("HOSTCTL_FLAVOR", "", "vm flavor")
+	hostRegion = env.String("HOSTCTL_REGION", "", "vm region")
+	hostKeyname = env.String("HOSTCTL_KEYNAME", "", "vm keyname")
+	hostUserdata = env.String("HOSTCTL_USERDATA", "", "vm user data")
+	sshUser = env.String("HOSTCTL_USER", os.Getenv("USER"), "ssh user")
+}
+
 func init() {
-	// TODO: fix env to allow reparsing environ
-	//Hostctl.PersistentFlags().StringVarP(&profile, "profile", "p", "", "profile to source")
+	readEnv()
+	Hostctl.PersistentFlags().StringVarP(&profile, "profile", "p", "", "profile to source")
 	Hostctl.AddCommand(versionCmd)
 }
 
@@ -43,8 +56,13 @@ var Hostctl = &cobra.Command{
 		cmd.Help()
 	},
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		if exists(expandHome("~/.hostctl")) {
+			fatal(source(expandHome("~/.hostctl")))
+			readEnv()
+		}
 		if profile != "" {
 			fatal(source(profile))
+			readEnv()
 		}
 	},
 }

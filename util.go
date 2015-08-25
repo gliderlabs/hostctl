@@ -5,6 +5,8 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"os/user"
+	"path/filepath"
 	"strings"
 	"sync"
 	"time"
@@ -46,6 +48,26 @@ func fatal(err error) {
 		fmt.Println("!!", err)
 		os.Exit(1)
 	}
+}
+
+func exists(path ...string) bool {
+	_, err := os.Stat(filepath.Join(path...))
+	if err == nil {
+		return true
+	}
+	if os.IsNotExist(err) {
+		return false
+	}
+	fatal(err)
+	return true
+}
+
+func expandHome(path string) string {
+	if path[:2] == "~/" {
+		usr, _ := user.Current()
+		path = strings.Replace(path, "~/", usr.HomeDir+"/", 1)
+	}
+	return path
 }
 
 func optArg(args []string, i int, default_ string) string {
