@@ -22,9 +22,13 @@ var (
 	hostUserdata = env.String("HOSTCTL_USERDATA", "", "vm user data")
 
 	user = env.String("HOSTCTL_USER", os.Getenv("USER"), "ssh user")
+
+	profile string
 )
 
 func init() {
+	// TODO: fix env to allow reparsing environ
+	//Hostctl.PersistentFlags().StringVarP(&profile, "profile", "p", "", "profile to source")
 	Hostctl.AddCommand(versionCmd)
 }
 
@@ -37,6 +41,11 @@ var Hostctl = &cobra.Command{
 	Short: "An opinionated tool for provisioning cloud VMs",
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()
+	},
+	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		if profile != "" {
+			fatal(source(profile))
+		}
 	},
 }
 
