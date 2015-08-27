@@ -18,7 +18,6 @@ func init() {
 
 type awsProvider struct {
 	client *ec2.EC2
-	config *aws.Config
 }
 
 // Setup ec2.Client using aws supported credentials (env, credential file)
@@ -27,8 +26,8 @@ func (p *awsProvider) Setup() error {
 	if region == "" {
 		return fmt.Errorf("HOSTCTL_REGION required")
 	}
-	p.config = aws.NewConfig().WithRegion(region)
-	p.client = ec2.New(p.config)
+	config := aws.NewConfig().WithRegion(region)
+	p.client = ec2.New(config)
 	return nil
 }
 
