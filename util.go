@@ -5,13 +5,13 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
-	"os/user"
 	"path/filepath"
 	"strings"
 	"sync"
 	"time"
 
 	"github.com/gliderlabs/hostctl/providers"
+	"github.com/mitchellh/go-homedir"
 	"golang.org/x/crypto/ssh/terminal"
 )
 
@@ -63,9 +63,8 @@ func exists(path ...string) bool {
 }
 
 func expandHome(path string) string {
-	if path[:2] == "~/" {
-		usr, _ := user.Current()
-		path = strings.Replace(path, "~/", usr.HomeDir+"/", 1)
+	if len(path) > 1 && path[:2] == "~/" {
+		path, _ = homedir.Expand(path)
 	}
 	return path
 }
