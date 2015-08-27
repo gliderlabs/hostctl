@@ -14,6 +14,7 @@ import (
 
 	"github.com/facebookgo/ensure"
 	"github.com/gliderlabs/hostctl/providers"
+	"github.com/gliderlabs/pkg/usage"
 )
 
 func testRunCmd(t *testing.T, cmdline string, statusExpected int, provider *providers.TestProvider, setupFn func()) (*bytes.Buffer, *bytes.Buffer) {
@@ -138,6 +139,7 @@ func TestVersionCmd(t *testing.T) {
 	t.Parallel()
 	stdout, stderr := testRunCmd(t, "hostctl version", 0, nil, func() {
 		Version = "0"
+		versionChecker = usage.NewChecker("hostctl", Version)
 	})
 	ensure.DeepEqual(t, stdout.String(), "0\n")
 	ensure.DeepEqual(t, stderr.String(), "")
