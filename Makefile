@@ -7,6 +7,9 @@ VERSION=0.1.0dev
 build:
 	glu build darwin,linux
 
+test:
+	go test -v
+
 deps:
 	go get github.com/gliderlabs/glu
 	go get -d .
