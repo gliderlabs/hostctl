@@ -17,6 +17,10 @@ test:
     - go test -v -race
 
 deployment:
+  master:
+    branch: master
+    commands:
+      - eval $(docker run gliderlabs/pagebuilder circleci-cmd)
   release:
     branch: release
     commands:

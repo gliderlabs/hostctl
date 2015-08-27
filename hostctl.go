@@ -35,7 +35,7 @@ func readEnv() {
 	hostFlavor = env.String("HOSTCTL_FLAVOR", "", "vm flavor")
 	hostRegion = env.String("HOSTCTL_REGION", "", "vm region")
 	hostKeyname = env.String("HOSTCTL_KEYNAME", "", "vm keyname")
-	hostUserdata = env.String("HOSTCTL_USERDATA", "", "vm user data")
+	hostUserdata = env.String("HOSTCTL_USERDATA", "", "optional vm user data")
 	sshUser = env.String("HOSTCTL_USER", os.Getenv("USER"), "ssh user")
 }
 
