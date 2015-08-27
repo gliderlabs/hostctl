@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+    
+    <url>
+     <loc>https://gliderlabs.com/hostctl/</loc>
+     <lastmod>2015-08-27</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    
+
+    
+        
+    <url>
+     <loc>https://gliderlabs.com/hostctl/user/quickstart/</loc>
+     <lastmod>2015-08-27</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>https://gliderlabs.com/hostctl/user/reference/</loc>
+     <lastmod>2015-08-27</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>https://gliderlabs.com/hostctl/user/faq/</loc>
+     <lastmod>2015-08-27</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    
+
+    
+        
+    <url>
+     <loc>https://gliderlabs.com/hostctl/dev/providers/</loc>
+     <lastmod>2015-08-27</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>https://gliderlabs.com/hostctl/dev/releases/</loc>
+     <lastmod>2015-08-27</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    
+
+</urlset>

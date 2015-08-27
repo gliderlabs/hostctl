@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic|Vollkorn:400,700' rel='stylesheet' type='text/css'>
+        
+        
+        <link rel="canonical" href="https://gliderlabs.com/hostctl/user/quickstart/">
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+
+	<title>Quickstart - Hostctl</title>
+
+        <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../../css/font-awesome-4.4.0.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="../../css/highlight.css">
+        <link href="../../css/base.css" rel="stylesheet">
+
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+
+        
+        <script>
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+            ga('create', 'UA-58928488-1', 'auto');
+            ga('send', 'pageview');
+        </script>
+        
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+            <!-- Main title -->
+            <a class="navbar-brand" href="../..">Hostctl</a>
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+            <!-- Main navigation -->
+            <ul class="nav navbar-nav">
+            
+            
+                <li >
+                    <a href="../..">Readme</a>
+                </li>
+            
+            
+            
+                <li class="dropdown active">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">User Guide <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                    
+                        <li class="active">
+                            <a href="./">Quickstart</a>
+                        </li>
+                    
+                        <li >
+                            <a href="../reference/">Reference</a>
+                        </li>
+                    
+                        <li >
+                            <a href="../faq/">FAQ</a>
+                        </li>
+                    
+                    </ul>
+                </li>
+            
+            
+            
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Developer Guide <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                    
+                        <li >
+                            <a href="../../dev/providers/">Adding Providers</a>
+                        </li>
+                    
+                        <li >
+                            <a href="../../dev/releases/">Staging Releases</a>
+                        </li>
+                    
+                    </ul>
+                </li>
+            
+            
+            </ul>
+
+            <!-- Search, Navigation and Repo links -->
+            <ul class="nav navbar-nav navbar-right">
+                <!--li >
+                    <a rel="next" href="../..">
+                        <i class="fa fa-arrow-left"></i> Previous
+                    </a>
+                </li>
+                <li >
+                    <a rel="prev" href="../reference/">
+                        Next <i class="fa fa-arrow-right"></i>
+                    </a>
+                </li-->
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Versions <b class="caret"></b></a>
+                    <ul class="dropdown-menu" id="versions-dropdown">
+                    </ul>
+                </li>
+                <li>
+                    <a href="http://glider-slackin.herokuapp.com/">
+                        <i class="fa fa-slack"></i>
+                        Community
+                    </a>
+                </li>
+                
+                <li>
+                    <a href="https://github.com/gliderlabs/hostctl">
+                        
+                            <i class="fa fa-github"></i>
+                        
+                        GitHub
+                    </a>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+</div>
+
+        <div class="container">
+            <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+    
+        <li class="main active"><a href="#quickstart">Quickstart</a></li>
+        
+            <li><a href="#overview">Overview</a></li>
+        
+            <li><a href="#installing">Installing</a></li>
+        
+            <li><a href="#environment">Environment</a></li>
+        
+            <li><a href="#cloud-provider-setup">Cloud Provider Setup</a></li>
+        
+            <li><a href="#base-vm-attributes">Base VM Attributes</a></li>
+        
+            <li><a href="#provisioning">Provisioning</a></li>
+        
+            <li><a href="#everything-else">Everything Else</a></li>
+        
+            <li><a href="#profiles">Profiles</a></li>
+        
+            <li><a href="#next-steps">Next Steps</a></li>
+        
+    
+    </ul>
+</div></div>
+            <div class="col-md-8 content" role="main">
+
+<h1 id="quickstart">Quickstart</h1>
+<p>This is a short, simple tutorial intended to get you started with Hostctl as
+quickly as possible. Alternatively, you can skip ahead to the <a href="../reference/">Command Reference</a>.</p>
+<h2 id="overview">Overview</h2>
+<p>Hostctl lets you spin up and down VMs with cloud providers like DigitalOcean and EC2. You can also use Hostctl to easily get their IP, SSH to them, and scale them. The goal is to make it easier when doing development and experiments.</p>
+<p>In this tutorial, we're going to use Hostctl with DigitalOcean to tour all the functionality it provides.</p>
+<h2 id="installing">Installing</h2>
+<p>If you haven't already, you want to download Hostctl for your platform. You can find the latest version on the <a href="https://github.com/gliderlabs/hostctl/releases">releases page</a>, or you can install from this URL providing your platform. Using <code>curl</code> and <code>tar</code> you can install <code>hostctl</code> right into a directory in your <code>$PATH</code>:</p>
+<pre><code>$ curl https://dl.gliderlabs.com/qs/hostctl/latest/$(uname -sm|tr \  _).tgz \
+    | tar -zxC /usr/local/bin
+</code></pre>
+
+<p>You can change <code>/usr/local/bin</code> as necessary. Now you should be able to run <code>hostctl</code> and see usage and available commands:</p>
+<pre><code>$ hostctl
+</code></pre>
+<h2 id="environment">Environment</h2>
+<p>VMs require a lot of parameters, which is one of the annoying parts of booting a VM that slows you down. Hostctl addresses this by letting you define parameters upfront in your environment, which you can put into loadable profiles.</p>
+<p>You can see everything you can configure in the environment with <code>hostctl env</code>:</p>
+<pre><code>$ hostctl env
+HOSTCTL_IMAGE=&quot;&quot;                         # vm image
+HOSTCTL_REGION=&quot;&quot;                        # vm region
+HOSTCTL_KEYNAME=&quot;&quot;                       # vm keyname
+HOSTCTL_USER=&quot;progrium&quot;                  # ssh user
+HOSTCTL_PROVIDER=&quot;digitalocean&quot;          # cloud provider
+HOSTCTL_NAME=&quot;&quot;                          # optional default name
+HOSTCTL_NAMESPACE=&quot;&quot;                     # optional namespace for names
+HOSTCTL_FLAVOR=&quot;&quot;                        # vm flavor
+HOSTCTL_USERDATA=&quot;&quot;                      # vm user data
+DO_TOKEN=&quot;&quot;                              # token for DigitalOcean API v2
+</code></pre>
+
+<p>We see they're mostly empty except for some defaults. <code>HOSTCTL_USER</code> defaults to your system's logged in user. <code>HOSTCTL_PROVIDER</code> defaults to DigitalOcean.</p>
+<h2 id="cloud-provider-setup">Cloud Provider Setup</h2>
+<p>The values you want for the rest are going to depend on the provider. We're going to focus on DigitalOcean. You can see our <a href="providers.md">Provider Reference</a> to see what values you want for EC2, for example.</p>
+<p>There's two values you'll have to lookup for this to work: <code>DO_TOKEN</code> which is a personal access token for the API, and <code>HOSTCTL_KEYNAME</code> which is typically the fingerprint (or ID) of the public key you want to use.</p>
+<p>If you don't have a personal access token, or to make a new one, you can go to <a href="https://cloud.digitalocean.com/settings/applications">Applications &amp; API</a> once logged into DigitalOcean. The fingerprint values for your SSH keys are under <a href="https://cloud.digitalocean.com/settings/security">Security</a> in your account settings.</p>
+<p>It's easiest to write these to the global Hostctl profile, a simple shell config script at <code>~/.hostctl</code> always sourced by <code>hostctl</code>. We'll write two lines to it:</p>
+<pre><code>$ echo "export DO_TOKEN=your-token" &gt;&gt; ~/.hostctl
+$ echo "export HOSTCTL_KEYNAME=your-ssh-key-fingerprint" &gt;&gt; ~/.hostctl
+</code></pre>
+<h2 id="base-vm-attributes">Base VM Attributes</h2>
+<p>The rest of the required environment defines your VM. <code>HOSTCTL_IMAGE</code>, <code>HOSTCTL_FLAVOR</code>, and <code>HOSTCTL_REGION</code>. For DigitalOcean, these are slug values from the API. In our case, we'll just use these:</p>
+<pre><code>$ export HOSTCTL_IMAGE=ubuntu
+$ export HOSTCTL_FLAVOR=512mb
+$ export HOSTCTL_REGION=nyc1
+$ export HOSTCTL_USER=root
+</code></pre>
+<p>We also set <code>HOSTCTL_USER</code> since DigitalOcean's default user is <code>root</code>. We're setting these in our terminal session environment, but they could also be defined anywhere else in your environment. Later we'll see how we can make them into loadable profiles.</p>
+<p>We can run <code>hostctl env</code> again to see its current configuration.</p>
+<h2 id="provisioning">Provisioning</h2>
+<p>Let's make a VM called <code>demo</code>:</p>
+<pre><code>$ hostctl up demo
+</code></pre>
+<p>The command will wait until the VM is ready to go, showing a progress bar while you wait. Take a moment to think about how easy that was.</p>
+<h2 id="everything-else">Everything Else</h2>
+<p>We can list our VMs and see <code>demo</code>, as well as any other VMs you might have running on this account:</p>
+<pre><code>$ hostctl ls
+demo
+</code></pre>
+<p>We can get the IP for <code>demo</code> very easily:</p>
+<pre><code>$ hostctl ip demo
+198.5.101.164
+</code></pre>
+<p>We could use this with SSH to connect to it by name:</p>
+<pre><code>$ ssh root@$(hostctl ip demo)
+</code></pre>
+<p>Although it's easier to use the builtin convenience command:</p>
+<pre><code>$ hostctl ssh demo
+</code></pre>
+<p>We can boot more VMs with <code>hostctl up</code> or we could create a cluster with <code>hostctl scale</code>:</p>
+<pre><code>$ hostctl scale node 3
+..........................................
+$ hostctl ls
+demo
+node.0
+node.1
+node.2
+</code></pre>
+<p>We can see it made 3 hosts called <code>node</code>. We could use scale again to resize the cluster or just scale to nothing:</p>
+<pre><code>$ hostctl scale node 0
+..........................................
+$ hostctl ls
+demo
+</code></pre>
+<p>But we can also just shutdown any hosts with <code>hostctl down</code>:</p>
+<pre><code>$ hostctl down demo
+</code></pre>
+<h2 id="profiles">Profiles</h2>
+<p>With our VM attributes in the environment, we can iteratively change them. Maybe I want the same VM, but using the <code>docker</code> image instead of <code>ubuntu</code>. Just set it:</p>
+<pre><code>$ export HOSTCTL_IMAGE=docker
+$ hostctl up docker-vm1
+</code></pre>
+<p>However, if we close this session and come back tomorrow, we won't have this environment. We'd have to set it all up again. But we can write our current environment to a profile that we can use later. We do this with <code>hostctl env --export</code>:</p>
+<pre><code>$ hostctl env --export &gt; docker.profile
+</code></pre>
+<p>If you look at the contents of <code>docker.profile</code>, it's a shell script that exports everything that was in your current hostctl environment. Now tomorrow we can use the profile without setting any environment:</p>
+<pre><code>$ hostctl -p docker.profile up docker-vm2
+</code></pre>
+<p>Profiles make it easy to iteratively build up a VM configuration and then save it to a file you can use later. You can also write profiles from scratch. They're just shell scripts, so the above is basically the same as:</p>
+<pre><code>$ source docker.profile
+$ hostctl up docker-vm2
+</code></pre>
+<h2 id="next-steps">Next Steps</h2>
+<p>And that's not all. Check out the <a href="../reference/">Command Reference</a> for what else you can do with these commands, or <a href="providers.md">Provider Reference</a> to try EC2.</p></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            
+            <center>Documentation built with <a href="https://gliderlabs.com/pagebuilder">Pagebuilder</a>.</center>
+        </footer>
+
+        <script src="../../js/jquery-1.10.2.min.js"></script>
+        <script src="../../js/bootstrap-3.0.3.min.js"></script>
+        <script src="../../js/highlight.pack.js"></script>
+        <script src="../../js/base.js"></script>
+        <script>
+          $( document ).ready(function() {
+              $.getJSON("https://gliderlabs.com/hostctl/versions.json", function(data) {
+                $("#versions-dropdown").append('<li><a href="https://gliderlabs.com/hostctl/latest">latest ('+data.latest+')</a></li>');
+                $.each(data.versions, function( index, value ) {
+                  $("#versions-dropdown").append('<li><a href="https://gliderlabs.com/hostctl/'+value+'">'+value+'</a></li>');
+                });
+              });
+          });
+        </script>
+    </body>
+</html>

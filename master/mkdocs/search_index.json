@@ -1,0 +1,129 @@
+{
+    "docs": [
+        {
+            "location": "/", 
+            "text": "Hostctl\n\n\nThe simplest way to boot and manage cloud VMs.\n\n\n\n\n\n\n\n\nHostctl is an opinionated CLI tool for basic cloud VM operations, ideal for\ndevelopment and personal use. It does nothing more than manage VM hosts, so if\nyou need anything else you should look at cloud provider specific tools. Hostctl\nsupports pluggable cloud providers, currently including DigitalOcean and Amazon\nEC2.\n\n\nGetting Hostctl\n\n\nYou can install the Hostctl binary right into a directory in your \n$PATH\n:\n\n\n$ curl https://dl.gliderlabs.com/gh/hostctl/latest/$(uname -sm|tr \\  _).tgz \\\n    | tar -zxC /usr/local/bin\n\n\n\n\nUsing Hostctl\n\n\nThe quickest way to see Hostctl in action is our\n\nQuickstart\n tutorial. After \nconfiguring for a particular\nprovider\n, spinning up a VM is as simple as:\n\n\n$ hostctl up \nvm-name\n\n\n\n\nFor a full list of command, see the \nCommand Reference\n in\nthe User Guide.\n\n\nContributing\n\n\nPull requests are welcome! We recommend getting feedback before starting by\nopening a \nGitHub issue\n or\ndiscussing in \nSlack\n.\n\n\nAlso check out our Developer Guide on \nContributing Providers\n\nand \nStaging Releases\n.\n\n\nLicense\n\n\nMIT", 
+            "title": "Readme"
+        }, 
+        {
+            "location": "/#hostctl", 
+            "text": "The simplest way to boot and manage cloud VMs.     Hostctl is an opinionated CLI tool for basic cloud VM operations, ideal for\ndevelopment and personal use. It does nothing more than manage VM hosts, so if\nyou need anything else you should look at cloud provider specific tools. Hostctl\nsupports pluggable cloud providers, currently including DigitalOcean and Amazon\nEC2.", 
+            "title": "Hostctl"
+        }, 
+        {
+            "location": "/#getting-hostctl", 
+            "text": "You can install the Hostctl binary right into a directory in your  $PATH :  $ curl https://dl.gliderlabs.com/gh/hostctl/latest/$(uname -sm|tr \\  _).tgz \\\n    | tar -zxC /usr/local/bin", 
+            "title": "Getting Hostctl"
+        }, 
+        {
+            "location": "/#using-hostctl", 
+            "text": "The quickest way to see Hostctl in action is our Quickstart  tutorial. After  configuring for a particular\nprovider , spinning up a VM is as simple as:  $ hostctl up  vm-name   For a full list of command, see the  Command Reference  in\nthe User Guide.", 
+            "title": "Using Hostctl"
+        }, 
+        {
+            "location": "/#contributing", 
+            "text": "Pull requests are welcome! We recommend getting feedback before starting by\nopening a  GitHub issue  or\ndiscussing in  Slack .  Also check out our Developer Guide on  Contributing Providers \nand  Staging Releases .", 
+            "title": "Contributing"
+        }, 
+        {
+            "location": "/#license", 
+            "text": "MIT", 
+            "title": "License"
+        }, 
+        {
+            "location": "/user/quickstart/", 
+            "text": "Quickstart\n\n\nThis is a short, simple tutorial intended to get you started with Hostctl as\nquickly as possible. Alternatively, you can skip ahead to the \nCommand Reference\n.\n\n\nOverview\n\n\nHostctl lets you spin up and down VMs with cloud providers like DigitalOcean and EC2. You can also use Hostctl to easily get their IP, SSH to them, and scale them. The goal is to make it easier when doing development and experiments.\n\n\nIn this tutorial, we're going to use Hostctl with DigitalOcean to tour all the functionality it provides.\n\n\nInstalling\n\n\nIf you haven't already, you want to download Hostctl for your platform. You can find the latest version on the \nreleases page\n, or you can install from this URL providing your platform. Using \ncurl\n and \ntar\n you can install \nhostctl\n right into a directory in your \n$PATH\n:\n\n\n$ curl https://dl.gliderlabs.com/qs/hostctl/latest/$(uname -sm|tr \\  _).tgz \\\n    | tar -zxC /usr/local/bin\n\n\n\n\nYou can change \n/usr/local/bin\n as necessary. Now you should be able to run \nhostctl\n and see usage and available commands:\n\n\n$ hostctl\n\n\n\nEnvironment\n\n\nVMs require a lot of parameters, which is one of the annoying parts of booting a VM that slows you down. Hostctl addresses this by letting you define parameters upfront in your environment, which you can put into loadable profiles.\n\n\nYou can see everything you can configure in the environment with \nhostctl env\n:\n\n\n$ hostctl env\nHOSTCTL_IMAGE=\n                         # vm image\nHOSTCTL_REGION=\n                        # vm region\nHOSTCTL_KEYNAME=\n                       # vm keyname\nHOSTCTL_USER=\nprogrium\n                  # ssh user\nHOSTCTL_PROVIDER=\ndigitalocean\n          # cloud provider\nHOSTCTL_NAME=\n                          # optional default name\nHOSTCTL_NAMESPACE=\n                     # optional namespace for names\nHOSTCTL_FLAVOR=\n                        # vm flavor\nHOSTCTL_USERDATA=\n                      # vm user data\nDO_TOKEN=\n                              # token for DigitalOcean API v2\n\n\n\n\nWe see they're mostly empty except for some defaults. \nHOSTCTL_USER\n defaults to your system's logged in user. \nHOSTCTL_PROVIDER\n defaults to DigitalOcean.\n\n\nCloud Provider Setup\n\n\nThe values you want for the rest are going to depend on the provider. We're going to focus on DigitalOcean. You can see our \nProvider Reference\n to see what values you want for EC2, for example.\n\n\nThere's two values you'll have to lookup for this to work: \nDO_TOKEN\n which is a personal access token for the API, and \nHOSTCTL_KEYNAME\n which is typically the fingerprint (or ID) of the public key you want to use.\n\n\nIf you don't have a personal access token, or to make a new one, you can go to \nApplications \n API\n once logged into DigitalOcean. The fingerprint values for your SSH keys are under \nSecurity\n in your account settings.\n\n\nIt's easiest to write these to the global Hostctl profile, a simple shell config script at \n~/.hostctl\n always sourced by \nhostctl\n. We'll write two lines to it:\n\n\n$ echo \"export DO_TOKEN=your-token\" \n ~/.hostctl\n$ echo \"export HOSTCTL_KEYNAME=your-ssh-key-fingerprint\" \n ~/.hostctl\n\n\n\nBase VM Attributes\n\n\nThe rest of the required environment defines your VM. \nHOSTCTL_IMAGE\n, \nHOSTCTL_FLAVOR\n, and \nHOSTCTL_REGION\n. For DigitalOcean, these are slug values from the API. In our case, we'll just use these:\n\n\n$ export HOSTCTL_IMAGE=ubuntu\n$ export HOSTCTL_FLAVOR=512mb\n$ export HOSTCTL_REGION=nyc1\n$ export HOSTCTL_USER=root\n\n\n\nWe also set \nHOSTCTL_USER\n since DigitalOcean's default user is \nroot\n. We're setting these in our terminal session environment, but they could also be defined anywhere else in your environment. Later we'll see how we can make them into loadable profiles.\n\n\nWe can run \nhostctl env\n again to see its current configuration.\n\n\nProvisioning\n\n\nLet's make a VM called \ndemo\n:\n\n\n$ hostctl up demo\n\n\n\nThe command will wait until the VM is ready to go, showing a progress bar while you wait. Take a moment to think about how easy that was.\n\n\nEverything Else\n\n\nWe can list our VMs and see \ndemo\n, as well as any other VMs you might have running on this account:\n\n\n$ hostctl ls\ndemo\n\n\n\nWe can get the IP for \ndemo\n very easily:\n\n\n$ hostctl ip demo\n198.5.101.164\n\n\n\nWe could use this with SSH to connect to it by name:\n\n\n$ ssh root@$(hostctl ip demo)\n\n\n\nAlthough it's easier to use the builtin convenience command:\n\n\n$ hostctl ssh demo\n\n\n\nWe can boot more VMs with \nhostctl up\n or we could create a cluster with \nhostctl scale\n:\n\n\n$ hostctl scale node 3\n..........................................\n$ hostctl ls\ndemo\nnode.0\nnode.1\nnode.2\n\n\n\nWe can see it made 3 hosts called \nnode\n. We could use scale again to resize the cluster or just scale to nothing:\n\n\n$ hostctl scale node 0\n..........................................\n$ hostctl ls\ndemo\n\n\n\nBut we can also just shutdown any hosts with \nhostctl down\n:\n\n\n$ hostctl down demo\n\n\n\nProfiles\n\n\nWith our VM attributes in the environment, we can iteratively change them. Maybe I want the same VM, but using the \ndocker\n image instead of \nubuntu\n. Just set it:\n\n\n$ export HOSTCTL_IMAGE=docker\n$ hostctl up docker-vm1\n\n\n\nHowever, if we close this session and come back tomorrow, we won't have this environment. We'd have to set it all up again. But we can write our current environment to a profile that we can use later. We do this with \nhostctl env --export\n:\n\n\n$ hostctl env --export \n docker.profile\n\n\n\nIf you look at the contents of \ndocker.profile\n, it's a shell script that exports everything that was in your current hostctl environment. Now tomorrow we can use the profile without setting any environment:\n\n\n$ hostctl -p docker.profile up docker-vm2\n\n\n\nProfiles make it easy to iteratively build up a VM configuration and then save it to a file you can use later. You can also write profiles from scratch. They're just shell scripts, so the above is basically the same as:\n\n\n$ source docker.profile\n$ hostctl up docker-vm2\n\n\n\nNext Steps\n\n\nAnd that's not all. Check out the \nCommand Reference\n for what else you can do with these commands, or \nProvider Reference\n to try EC2.", 
+            "title": "Quickstart"
+        }, 
+        {
+            "location": "/user/quickstart/#quickstart", 
+            "text": "This is a short, simple tutorial intended to get you started with Hostctl as\nquickly as possible. Alternatively, you can skip ahead to the  Command Reference .", 
+            "title": "Quickstart"
+        }, 
+        {
+            "location": "/user/quickstart/#overview", 
+            "text": "Hostctl lets you spin up and down VMs with cloud providers like DigitalOcean and EC2. You can also use Hostctl to easily get their IP, SSH to them, and scale them. The goal is to make it easier when doing development and experiments.  In this tutorial, we're going to use Hostctl with DigitalOcean to tour all the functionality it provides.", 
+            "title": "Overview"
+        }, 
+        {
+            "location": "/user/quickstart/#installing", 
+            "text": "If you haven't already, you want to download Hostctl for your platform. You can find the latest version on the  releases page , or you can install from this URL providing your platform. Using  curl  and  tar  you can install  hostctl  right into a directory in your  $PATH :  $ curl https://dl.gliderlabs.com/qs/hostctl/latest/$(uname -sm|tr \\  _).tgz \\\n    | tar -zxC /usr/local/bin  You can change  /usr/local/bin  as necessary. Now you should be able to run  hostctl  and see usage and available commands:  $ hostctl", 
+            "title": "Installing"
+        }, 
+        {
+            "location": "/user/quickstart/#environment", 
+            "text": "VMs require a lot of parameters, which is one of the annoying parts of booting a VM that slows you down. Hostctl addresses this by letting you define parameters upfront in your environment, which you can put into loadable profiles.  You can see everything you can configure in the environment with  hostctl env :  $ hostctl env\nHOSTCTL_IMAGE=                          # vm image\nHOSTCTL_REGION=                         # vm region\nHOSTCTL_KEYNAME=                        # vm keyname\nHOSTCTL_USER= progrium                   # ssh user\nHOSTCTL_PROVIDER= digitalocean           # cloud provider\nHOSTCTL_NAME=                           # optional default name\nHOSTCTL_NAMESPACE=                      # optional namespace for names\nHOSTCTL_FLAVOR=                         # vm flavor\nHOSTCTL_USERDATA=                       # vm user data\nDO_TOKEN=                               # token for DigitalOcean API v2  We see they're mostly empty except for some defaults.  HOSTCTL_USER  defaults to your system's logged in user.  HOSTCTL_PROVIDER  defaults to DigitalOcean.", 
+            "title": "Environment"
+        }, 
+        {
+            "location": "/user/quickstart/#cloud-provider-setup", 
+            "text": "The values you want for the rest are going to depend on the provider. We're going to focus on DigitalOcean. You can see our  Provider Reference  to see what values you want for EC2, for example.  There's two values you'll have to lookup for this to work:  DO_TOKEN  which is a personal access token for the API, and  HOSTCTL_KEYNAME  which is typically the fingerprint (or ID) of the public key you want to use.  If you don't have a personal access token, or to make a new one, you can go to  Applications   API  once logged into DigitalOcean. The fingerprint values for your SSH keys are under  Security  in your account settings.  It's easiest to write these to the global Hostctl profile, a simple shell config script at  ~/.hostctl  always sourced by  hostctl . We'll write two lines to it:  $ echo \"export DO_TOKEN=your-token\"   ~/.hostctl\n$ echo \"export HOSTCTL_KEYNAME=your-ssh-key-fingerprint\"   ~/.hostctl", 
+            "title": "Cloud Provider Setup"
+        }, 
+        {
+            "location": "/user/quickstart/#base-vm-attributes", 
+            "text": "The rest of the required environment defines your VM.  HOSTCTL_IMAGE ,  HOSTCTL_FLAVOR , and  HOSTCTL_REGION . For DigitalOcean, these are slug values from the API. In our case, we'll just use these:  $ export HOSTCTL_IMAGE=ubuntu\n$ export HOSTCTL_FLAVOR=512mb\n$ export HOSTCTL_REGION=nyc1\n$ export HOSTCTL_USER=root  We also set  HOSTCTL_USER  since DigitalOcean's default user is  root . We're setting these in our terminal session environment, but they could also be defined anywhere else in your environment. Later we'll see how we can make them into loadable profiles.  We can run  hostctl env  again to see its current configuration.", 
+            "title": "Base VM Attributes"
+        }, 
+        {
+            "location": "/user/quickstart/#provisioning", 
+            "text": "Let's make a VM called  demo :  $ hostctl up demo  The command will wait until the VM is ready to go, showing a progress bar while you wait. Take a moment to think about how easy that was.", 
+            "title": "Provisioning"
+        }, 
+        {
+            "location": "/user/quickstart/#everything-else", 
+            "text": "We can list our VMs and see  demo , as well as any other VMs you might have running on this account:  $ hostctl ls\ndemo  We can get the IP for  demo  very easily:  $ hostctl ip demo\n198.5.101.164  We could use this with SSH to connect to it by name:  $ ssh root@$(hostctl ip demo)  Although it's easier to use the builtin convenience command:  $ hostctl ssh demo  We can boot more VMs with  hostctl up  or we could create a cluster with  hostctl scale :  $ hostctl scale node 3\n..........................................\n$ hostctl ls\ndemo\nnode.0\nnode.1\nnode.2  We can see it made 3 hosts called  node . We could use scale again to resize the cluster or just scale to nothing:  $ hostctl scale node 0\n..........................................\n$ hostctl ls\ndemo  But we can also just shutdown any hosts with  hostctl down :  $ hostctl down demo", 
+            "title": "Everything Else"
+        }, 
+        {
+            "location": "/user/quickstart/#profiles", 
+            "text": "With our VM attributes in the environment, we can iteratively change them. Maybe I want the same VM, but using the  docker  image instead of  ubuntu . Just set it:  $ export HOSTCTL_IMAGE=docker\n$ hostctl up docker-vm1  However, if we close this session and come back tomorrow, we won't have this environment. We'd have to set it all up again. But we can write our current environment to a profile that we can use later. We do this with  hostctl env --export :  $ hostctl env --export   docker.profile  If you look at the contents of  docker.profile , it's a shell script that exports everything that was in your current hostctl environment. Now tomorrow we can use the profile without setting any environment:  $ hostctl -p docker.profile up docker-vm2  Profiles make it easy to iteratively build up a VM configuration and then save it to a file you can use later. You can also write profiles from scratch. They're just shell scripts, so the above is basically the same as:  $ source docker.profile\n$ hostctl up docker-vm2", 
+            "title": "Profiles"
+        }, 
+        {
+            "location": "/user/quickstart/#next-steps", 
+            "text": "And that's not all. Check out the  Command Reference  for what else you can do with these commands, or  Provider Reference  to try EC2.", 
+            "title": "Next Steps"
+        }, 
+        {
+            "location": "/user/reference/", 
+            "text": "Reference", 
+            "title": "Reference"
+        }, 
+        {
+            "location": "/user/reference/#reference", 
+            "text": "", 
+            "title": "Reference"
+        }, 
+        {
+            "location": "/user/faq/", 
+            "text": "Frequently Asked Questions", 
+            "title": "FAQ"
+        }, 
+        {
+            "location": "/user/faq/#frequently-asked-questions", 
+            "text": "", 
+            "title": "Frequently Asked Questions"
+        }, 
+        {
+            "location": "/dev/providers/", 
+            "text": "Contributing Cloud Providers", 
+            "title": "Adding Providers"
+        }, 
+        {
+            "location": "/dev/providers/#contributing-cloud-providers", 
+            "text": "", 
+            "title": "Contributing Cloud Providers"
+        }, 
+        {
+            "location": "/dev/releases/", 
+            "text": "Staging Releases\n\n\nDon't wait for maintainers to cut a release! You can stage a release at any time\nusing GitHub. Just open a PR against the release branch from master. If merged,\na new release will automatically be cut.\n\n\nPlease be sure to bump the version and update CHANGELOG.md and include your\nchangelog text in the PR body.", 
+            "title": "Staging Releases"
+        }, 
+        {
+            "location": "/dev/releases/#staging-releases", 
+            "text": "Don't wait for maintainers to cut a release! You can stage a release at any time\nusing GitHub. Just open a PR against the release branch from master. If merged,\na new release will automatically be cut.  Please be sure to bump the version and update CHANGELOG.md and include your\nchangelog text in the PR body.", 
+            "title": "Staging Releases"
+        }
+    ]
+}
