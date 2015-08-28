@@ -1,14 +1,21 @@
 package main
 
 import (
-	"fmt"
+	"bytes"
 	"os"
 	"strconv"
 	"sync"
+	"text/template"
 
 	"github.com/gliderlabs/hostctl/providers"
 	"github.com/spf13/cobra"
 )
+
+type HostNamer interface {
+	HostNamePattern() string
+}
+
+var defaultHostPattern = "{{.Namespace}}{{.Name}}.{{.Index}}"
 
 func init() {
 	Hostctl.AddCommand(scaleCmd)
@@ -34,8 +41,16 @@ var scaleCmd = &cobra.Command{
 		loadStdinUserdata()
 		provider, err := providers.Get(providerName, true)
 		fatal(err)
-		existing := existingHosts(provider, name)
-		desired := desiredHosts(name, count)
+
+		hostPattern := defaultHostPattern
+		if namer, ok := provider.(HostNamer); ok {
+			hostPattern = namer.HostNamePattern()
+		}
+
+		hostTemplate := template.Must(template.New("host").Parse(hostPattern))
+
+		existing := existingHosts(hostTemplate, provider, name)
+		desired := desiredHosts(hostTemplate, name, count)
 		hosts := append(strSet(existing, desired), namespace+name)
 		finished := progressBar(".", 2)
 		parallelWait(hosts, func(_ int, host string, wg *sync.WaitGroup) {
@@ -53,19 +68,29 @@ var scaleCmd = &cobra.Command{
 	},
 }
 
-func desiredHosts(name, count string) []string {
+func hostName(t *template.Template, name string, index interface{}) string {
+	var buf bytes.Buffer
+	_ = t.Execute(&buf, struct {
+		Namespace string
+		Name      string
+		Index     interface{}
+	}{namespace, name, index})
+	return buf.String()
+}
+
+func desiredHosts(hostTemplate *template.Template, name, count string) []string {
 	c, err := strconv.Atoi(count)
 	fatal(err)
 	var hosts []string
 	for i := 0; i < c; i++ {
-		hosts = append(hosts, fmt.Sprintf("%s%s.%v", namespace, name, i))
+		hosts = append(hosts, hostName(hostTemplate, name, i))
 	}
 	return hosts
 }
 
-func existingHosts(provider providers.HostProvider, name string) []string {
+func existingHosts(hostTemplate *template.Template, provider providers.HostProvider, name string) []string {
 	var hosts []string
-	for _, h := range provider.List(namespace + name + ".*") {
+	for _, h := range provider.List(hostName(hostTemplate, name, "*")) {
 		hosts = append(hosts, h.Name)
 	}
 	return hosts
